@@ -109,9 +109,9 @@ export function EmployeeImport() {
         <div className="text-sm text-white/60">
           <p className="font-medium text-white/80 mb-1">รูปแบบไฟล์ CSV:</p>
           <code className="text-xs bg-white/10 px-2 py-1 rounded">
-            id, name, department
+            id, name, department, nationality
           </code>
-          <p className="mt-1">รหัสพนักงานต้องเป็นตัวเลข 7 หลัก</p>
+          <p className="mt-1">รหัสพนักงานต้องเป็นตัวเลข 7 หลัก (สัญชาติระบุ: Thai หรือ Myanmar)</p>
         </div>
       </div>
 

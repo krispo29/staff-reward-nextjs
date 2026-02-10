@@ -210,17 +210,17 @@ export function AdminPanel() {
               ท่านแน่ใจหรือไม่?
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="gap-2">
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
               onClick={() => setShowResetDialog(false)}
-              className="border-white/20 text-white hover:bg-white/10 cursor-pointer"
+              className="flex-1 h-12 text-base font-semibold border-white/20 text-white bg-white/5 hover:bg-white/10 transition-all cursor-pointer mr-2"
             >
               ยกเลิก
             </Button>
             <Button
               onClick={handleReset}
-              className="bg-red-500 hover:bg-red-600 text-white cursor-pointer"
+              className="flex-1 h-12 text-base font-semibold bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition-all cursor-pointer"
             >
               ยืนยัน เริ่มใหม่
             </Button>

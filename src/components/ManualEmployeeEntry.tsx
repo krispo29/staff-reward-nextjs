@@ -10,8 +10,10 @@ import {
   CheckCircle,
   WarningCircle,
   Plus,
+  CaretDown,
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
 
 interface EmployeeRow {
   id: string;
@@ -25,6 +27,7 @@ const emptyRow: EmployeeRow = { id: "", name: "", department: "", nationality: "
 export function ManualEmployeeEntry() {
   const { employees, loadEmployees } = useDrawStore();
   const [rows, setRows] = useState<EmployeeRow[]>([{ ...emptyRow }]);
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [status, setStatus] = useState<{
     type: "idle" | "success" | "error";
     message: string;
@@ -33,7 +36,7 @@ export function ManualEmployeeEntry() {
   const updateRow = (index: number, field: keyof EmployeeRow, value: string) => {
     setRows((prev) => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
+      updated[index] = { ...updated[index], [field]: value } as EmployeeRow;
       return updated;
     });
   };
@@ -45,6 +48,7 @@ export function ManualEmployeeEntry() {
   const removeRow = (index: number) => {
     if (rows.length <= 1) return;
     setRows((prev) => prev.filter((_, i) => i !== index));
+    if (openDropdown === index) setOpenDropdown(null);
   };
 
   const handleSubmit = () => {
@@ -104,8 +108,10 @@ export function ManualEmployeeEntry() {
   };
 
   const handleClearAll = () => {
-    loadEmployees([]);
-    setStatus({ type: "success", message: "ล้างข้อมูลพนักงานทั้งหมดแล้ว" });
+    if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลพนักงานทั้งหมด?")) {
+      loadEmployees([]);
+      setStatus({ type: "success", message: "ล้างข้อมูลพนักงานทั้งหมดแล้ว" });
+    }
   };
 
   return (
@@ -130,13 +136,14 @@ export function ManualEmployeeEntry() {
       </div>
 
       {/* Rows */}
-      <div className="space-y-2 max-h-[250px] overflow-y-auto scrollbar-thin pr-1">
+      <div className="space-y-2 max-h-[300px] overflow-visible pr-1">
         {rows.map((row, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-[80px_1fr_1fr_100px_36px] gap-2"
+            className="grid grid-cols-[80px_1fr_1fr_100px_36px] gap-2 relative"
+            style={{ zIndex: openDropdown === index ? 50 : 1 }}
           >
             <input
               type="text"
@@ -162,14 +169,66 @@ export function ManualEmployeeEntry() {
               placeholder="แผนก"
               className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
             />
-            <select
-              value={row.nationality}
-              onChange={(e) => updateRow(index, "nationality", e.target.value)}
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30 cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7em] bg-no-repeat bg-[right_0.5rem_center] pr-6"
-            >
-              <option value="Thai" className="bg-slate-800">🇹🇭 ไทย</option>
-              <option value="Myanmar" className="bg-slate-800">🇲🇲 พม่า</option>
-            </select>
+            
+            {/* Custom Nationality Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setOpenDropdown(openDropdown === index ? null : index)}
+                className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white flex items-center justify-between hover:bg-white/15 transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {row.nationality === "Thai" ? (
+                    <FlagThai className="w-4 h-auto rounded-[1px] flex-shrink-0" />
+                  ) : (
+                    <FlagMyanmar className="w-4 h-auto rounded-[1px] flex-shrink-0" />
+                  )}
+                  <span className="truncate">{row.nationality === "Thai" ? "ไทย" : "พม่า"}</span>
+                </div>
+                <CaretDown 
+                  weight="bold" 
+                  className={`w-3 h-3 text-white/40 transition-transform duration-200 flex-shrink-0 ${openDropdown === index ? 'rotate-180' : ''}`} 
+                />
+              </button>
+
+              {openDropdown === index && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40 bg-transparent" 
+                    onClick={() => setOpenDropdown(null)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute top-full left-0 w-full mt-1 z-50 bg-[#1e293b] border border-white/10 rounded-md shadow-2xl overflow-hidden py-1"
+                  >
+                    <button
+                      type="button"
+                      className={`w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-white/10 transition-colors ${row.nationality === "Thai" ? "bg-blue-500/10 text-blue-400" : "text-white/70"}`}
+                      onClick={() => {
+                        updateRow(index, "nationality", "Thai");
+                        setOpenDropdown(null);
+                      }}
+                    >
+                      <FlagThai className="w-4 h-auto rounded-[1px]" />
+                      <span>ไทย</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`w-full px-3 py-2 text-sm text-left flex items-center gap-2 hover:bg-white/10 transition-colors ${row.nationality === "Myanmar" ? "bg-blue-500/10 text-blue-400" : "text-white/70"}`}
+                      onClick={() => {
+                        updateRow(index, "nationality", "Myanmar");
+                        setOpenDropdown(null);
+                      }}
+                    >
+                      <FlagMyanmar className="w-4 h-auto rounded-[1px]" />
+                      <span>พม่า</span>
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </div>
+
             <button
               onClick={() => removeRow(index)}
               disabled={rows.length <= 1}
@@ -191,18 +250,18 @@ export function ManualEmployeeEntry() {
       </button>
 
       {/* Action buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 relative z-0">
         <Button
           onClick={handleSubmit}
-          className="flex-1 h-10 text-sm bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
+          className="flex-1 h-12 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 cursor-pointer"
         >
-          <UserPlus weight="bold" className="w-4 h-4 mr-1.5" />
+          <UserPlus weight="bold" className="w-5 h-5 mr-2" />
           เพิ่มพนักงาน
         </Button>
         <Button
           onClick={handleClearAll}
           variant="outline"
-          className="h-10 text-sm border-white/15 text-white/70 hover:bg-red-500/10 hover:text-red-400 hover:border-red-400/30 cursor-pointer"
+          className="flex-1 h-12 text-base font-semibold border-white/20 text-white bg-white/5 hover:bg-red-500/10 hover:text-red-400 hover:border-red-400/30 transition-all cursor-pointer"
         >
           ล้างทั้งหมด
         </Button>

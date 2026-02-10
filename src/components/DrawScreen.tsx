@@ -17,7 +17,10 @@ import {
   CheckCircle,
   XCircle,
   WarningCircle,
+  ListMagnifyingGlass,
 } from "@phosphor-icons/react";
+import { EntrantsModal } from "./EntrantsModal";
+import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
 
 export function DrawScreen() {
   const {
@@ -36,6 +39,8 @@ export function DrawScreen() {
     error,
     clearError,
   } = useDrawStore();
+
+  const [showEntrantsModal, setShowEntrantsModal] = React.useState(false);
 
   const onAnimationComplete = useCallback(() => {
     revealWinner();
@@ -78,13 +83,26 @@ export function DrawScreen() {
         {/* Quota Counter */}
         <div className="flex gap-4 text-sm font-medium">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300">
-            <span>🇹🇭 ไทย:</span>
-            <span className="font-bold">{winners.filter((w) => (w.nationality || "Thai") === "Thai").length} / {settings.quotas.Thai}</span>
+            <FlagThai className="w-5 h-auto rounded-[2px]" />
+            <span>ไทย:</span>
+            <span className="font-bold">
+              {winners.filter((w) => (w.nationality || "Thai") === "Thai").length} / {settings.quotas.Thai}
+            </span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-            <span>🇲🇲 พม่า:</span>
-            <span className="font-bold">{winners.filter((w) => w.nationality === "Myanmar").length} / {settings.quotas.Myanmar}</span>
+            <FlagMyanmar className="w-5 h-auto rounded-[2px]" />
+            <span>พม่า:</span>
+            <span className="font-bold">
+              {winners.filter((w) => w.nationality === "Myanmar").length} / {settings.quotas.Myanmar}
+            </span>
           </div>
+          <button
+            onClick={() => setShowEntrantsModal(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+          >
+            <ListMagnifyingGlass weight="bold" className="w-4 h-4" />
+            <span>ตรวจสอบรายชื่อ</span>
+          </button>
         </div>
 
         {/* Slot Machine */}
@@ -92,6 +110,11 @@ export function DrawScreen() {
 
         {/* Winner reveal */}
         <WinnerReveal winner={currentWinner} isRevealed={isShowWinner} />
+
+        <EntrantsModal
+          isOpen={showEntrantsModal}
+          onClose={() => setShowEntrantsModal(false)}
+        />
 
         {/* Action buttons */}
         <motion.div
