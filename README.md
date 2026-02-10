@@ -1,36 +1,155 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎰 Staff Lucky Draw — ระบบจับรางวัลพนักงาน
 
-## Getting Started
+ระบบจับรางวัลพนักงานแบบ Slot Machine สำหรับจับรางวัลผู้โชคดี 10 ท่าน รางวัลละ 10,000 บาท พร้อมแอนิเมชันที่สวยงามและรองรับการใช้งานบน iPad
 
-First, run the development server:
+## ✨ ฟีเจอร์หลัก
+
+- 🎰 **Slot Machine Animation** — ตัวเลข 7 หลักหมุนแบบสล็อตแมชชีน หยุดทีละตัวจากซ้ายไปขวา
+- 🎉 **Confetti Celebration** — เอฟเฟกต์ confetti เมื่อจับรางวัลได้ผู้โชคดี
+- 📱 **iPad Optimized** — ออกแบบมาสำหรับ iPad ทั้ง landscape และ portrait
+- 👴 **Elderly Friendly** — ตัวหนังสือใหญ่ ปุ่มใหญ่ อ่านง่าย เหมาะกับผู้ใช้สูงอายุ
+- 📊 **Winners List** — แสดงรายชื่อผู้โชคดีทั้งหมด พร้อม export CSV และ print
+- ⚙️ **Admin Panel** — แผงควบคุมสำหรับตั้งค่า, นำเข้าข้อมูล, กรอกข้อมูลมือ, reset
+- 📂 **CSV Import** — นำเข้าข้อมูลพนักงานด้วยไฟล์ CSV (ลากวาง)
+- ✏️ **Manual Entry** — กรอกข้อมูลพนักงานในเว็บโดยตรง
+
+## 🛠 Tech Stack
+
+| เทคโนโลยี                | หน้าที่          |
+| ------------------------ | ---------------- |
+| Next.js 14+ (App Router) | Framework        |
+| TypeScript               | Language         |
+| Tailwind CSS v4          | Styling          |
+| shadcn/ui                | UI Components    |
+| Zustand                  | State Management |
+| Framer Motion            | Animations       |
+| canvas-confetti          | Confetti Effects |
+| PapaParse                | CSV Parsing      |
+
+## 📦 การติดตั้ง
 
 ```bash
+# Clone โปรเจค
+git clone <repository-url>
+cd staff-reward-nextjs
+
+# ติดตั้ง dependencies
+npm install
+
+# เริ่มการพัฒนา
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+เปิดเบราว์เซอร์ที่ [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 โครงสร้างโปรเจค
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── layout.tsx          # Root layout (Inter font, viewport)
+│   ├── page.tsx            # Main draw page
+│   └── globals.css         # Theme + iPad optimization
+├── components/
+│   ├── ui/                 # shadcn/ui components
+│   ├── Layout.tsx          # Responsive container
+│   ├── StartScreen.tsx     # หน้าเริ่มต้น
+│   ├── DrawScreen.tsx      # หน้าจับรางวัลหลัก
+│   ├── SlotMachine.tsx     # Slot machine (7 reels)
+│   ├── SlotReel.tsx        # Single digit reel
+│   ├── DrawCounter.tsx     # ตัวนับ (X จาก 10)
+│   ├── WinnerReveal.tsx    # แสดงผู้โชคดี + confetti
+│   ├── WinnerCard.tsx      # Card ผู้โชคดีแต่ละคน
+│   ├── WinnersList.tsx     # รายชื่อผู้โชคดีทั้งหมด
+│   ├── AdminPanel.tsx      # แผงควบคุม
+│   ├── Settings.tsx        # ตั้งค่า
+│   ├── EmployeeImport.tsx  # นำเข้า CSV
+│   └── ManualEmployeeEntry.tsx  # กรอกข้อมูลมือ
+├── store/
+│   └── drawStore.ts        # Zustand store
+├── hooks/
+│   └── useSlotAnimation.ts # Animation hook
+├── types/
+│   └── employee.ts         # TypeScript types
+├── lib/
+│   ├── drawLogic.ts        # Random selection algorithm
+│   ├── animationConfig.ts  # Animation timing
+│   ├── exportWinners.ts    # CSV export + print
+│   ├── csvParser.ts        # PapaParse CSV parsing
+│   └── utils.ts            # Utility functions
+└── data/
+    └── mockEmployees.ts    # Mock data (100 คน)
+```
 
-## Learn More
+## 🎮 วิธีใช้งาน
 
-To learn more about Next.js, take a look at the following resources:
+### เริ่มจับรางวัล
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. เปิดเว็บที่ `http://localhost:3000`
+2. กดปุ่ม **"เริ่มจับรางวัล"**
+3. กดปุ่ม **"จับรางวัล"** — ดู slot machine หมุน
+4. รอผลลัพธ์ — confetti + แสดงชื่อผู้โชคดี
+5. กดปุ่ม **"จับรางวัลถัดไป"** ทำซ้ำจนครบ 10 รางวัล
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### นำเข้าข้อมูลพนักงาน
 
-## Deploy on Vercel
+#### วิธีที่ 1: Import CSV
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. กดปุ่ม ⚙️ (มุมขวาบน) เปิดแผงควบคุม
+2. กด **"นำเข้าข้อมูลพนักงาน"**
+3. ลากไฟล์ CSV มาวาง หรือคลิกเพื่อเลือกไฟล์
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### วิธีที่ 2: กรอกข้อมูลเอง
+
+1. กดปุ่ม ⚙️ (มุมขวาบน) เปิดแผงควบคุม
+2. กด **"กรอกข้อมูลพนักงาน"**
+3. กรอกรหัส 7 หลัก, ชื่อ, แผนก
+4. กด **"เพิ่มแถว"** เพื่อเพิ่มคนต่อไป
+5. กด **"เพิ่มพนักงาน"** เพื่อบันทึก
+
+### รูปแบบไฟล์ CSV
+
+```csv
+id,name,department
+2210001,สมชาย สุขใจ,Engineering
+2210002,สมหญิง ใจดี,Marketing
+2210003,วิชัย มั่นคง,Sales
+```
+
+> ⚠️ รหัสพนักงานต้องเป็นตัวเลข 7 หลัก
+
+ไฟล์ตัวอย่าง: [`public/sample_employees.csv`](public/sample_employees.csv)
+
+### ตั้งค่า
+
+- **ความเร็วแอนิเมชัน**: ช้า / ปกติ / เร็ว
+- **เสียง**: เปิด / ปิด
+- **Confetti**: เปิด / ปิด
+
+### Export ผลลัพธ์
+
+- **Export CSV** — ดาวน์โหลดรายชื่อผู้โชคดีเป็นไฟล์ CSV
+- **พิมพ์** — พิมพ์รายชื่อผู้โชคดีเป็นตาราง
+
+## 🚀 Build & Deploy
+
+```bash
+# Build สำหรับ production
+npm run build
+
+# เริ่ม production server
+npm start
+```
+
+แนะนำ deploy บน [Vercel](https://vercel.com):
+
+```bash
+npx vercel
+```
+
+## 📋 สิ่งที่ต้องรู้
+
+- ข้อมูลพนักงานเก็บใน **client-side state** (Zustand) — จะหายเมื่อ refresh หน้า
+- Mock data 100 คนจะโหลดอัตโนมัติเมื่อเปิดครั้งแรก
+- สามารถ import CSV เพื่อแทนที่ mock data
+- ไม่ต้องมี backend / database
