@@ -9,7 +9,15 @@ import { WinnerReveal } from "@/components/WinnerReveal";
 import { WinnersList } from "@/components/WinnersList";
 import { useDrawStore } from "@/store/drawStore";
 import { useSlotAnimation } from "@/hooks/useSlotAnimation";
-import { PlayCircle, FastForwardCircle, ArrowCounterClockwise, Confetti } from "@phosphor-icons/react";
+import {
+  PlayCircle,
+  FastForwardCircle,
+  ArrowCounterClockwise,
+  Confetti,
+  CheckCircle,
+  XCircle,
+  WarningCircle,
+} from "@phosphor-icons/react";
 
 export function DrawScreen() {
   const {
@@ -21,8 +29,12 @@ export function DrawScreen() {
     settings,
     drawWinner,
     revealWinner,
+    acceptWinner,
+    rejectWinner,
     nextDraw,
     reset,
+    error,
+    clearError,
   } = useDrawStore();
 
   const onAnimationComplete = useCallback(() => {
@@ -51,7 +63,9 @@ export function DrawScreen() {
   }, [resetAnimation, reset]);
 
   const isCompleted = drawStatus === "completed";
-  const isRevealed = drawStatus === "revealed" || isCompleted;
+  const isRevealed = drawStatus === "revealed";
+  const isConfirmed = drawStatus === "confirmed";
+  const isShowWinner = isRevealed || isConfirmed || isCompleted;
   const isIdle = drawStatus === "idle" && !isAnimating;
 
   return (
@@ -61,11 +75,23 @@ export function DrawScreen() {
         {/* Draw counter */}
         <DrawCounter currentDraw={currentDraw} maxDraws={maxDraws} />
 
+        {/* Quota Counter */}
+        <div className="flex gap-4 text-sm font-medium">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300">
+            <span>🇹🇭 ไทย:</span>
+            <span className="font-bold">{winners.filter((w) => (w.nationality || "Thai") === "Thai").length} / {settings.quotas.Thai}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+            <span>🇲🇲 พม่า:</span>
+            <span className="font-bold">{winners.filter((w) => w.nationality === "Myanmar").length} / {settings.quotas.Myanmar}</span>
+          </div>
+        </div>
+
         {/* Slot Machine */}
         <SlotMachine reels={reels} isAnimating={isAnimating} />
 
         {/* Winner reveal */}
-        <WinnerReveal winner={currentWinner} isRevealed={isRevealed} />
+        <WinnerReveal winner={currentWinner} isRevealed={isShowWinner} />
 
         {/* Action buttons */}
         <motion.div
@@ -74,17 +100,53 @@ export function DrawScreen() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          {isIdle && !isCompleted && (
-            <Button
-              onClick={handleDraw}
-              className="h-16 md:h-20 px-10 md:px-14 text-xl md:text-2xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 border-0 cursor-pointer"
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute -top-16 left-1/2 -translate-x-1/2 w-max max-w-[90vw] px-4 py-2 rounded-lg bg-red-500/90 text-white text-sm font-medium shadow-lg backdrop-blur-sm z-50 flex items-center gap-2"
             >
-              <PlayCircle weight="duotone" className="w-7 h-7 mr-2" />
-              จับรางวัล
-            </Button>
+              <WarningCircle weight="fill" className="w-5 h-5 flex-shrink-0" />
+              {error}
+              <button onClick={clearError} className="ml-2 opacity-80 hover:opacity-100">
+                <XCircle weight="fill" className="w-4 h-4" />
+              </button>
+            </motion.div>
           )}
 
-          {isRevealed && !isCompleted && (
+          {isIdle && !isCompleted && (
+            <div className="relative">
+              <Button
+                onClick={handleDraw}
+                disabled={!!error}
+                className="h-16 md:h-20 px-10 md:px-14 text-xl md:text-2xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <PlayCircle weight="duotone" className="w-7 h-7 mr-2" />
+                จับรางวัล
+              </Button>
+            </div>
+          )}
+
+          {isRevealed && (
+            <div className="flex gap-4">
+              <Button
+                onClick={rejectWinner}
+                className="h-16 md:h-20 px-8 text-xl font-bold rounded-2xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/50 hover:border-red-400 transition-all duration-300 cursor-pointer"
+              >
+                <XCircle weight="duotone" className="w-7 h-7 mr-2" />
+                สละสิทธิ์
+              </Button>
+              <Button
+                onClick={acceptWinner}
+                className="h-16 md:h-20 px-10 text-xl font-bold rounded-2xl bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20 transition-all duration-300 cursor-pointer"
+              >
+                <CheckCircle weight="duotone" className="w-7 h-7 mr-2" />
+                รับรางวัล
+              </Button>
+            </div>
+          )}
+
+          {isConfirmed && !isCompleted && (
             <Button
               onClick={handleNext}
               className="h-16 md:h-20 px-10 md:px-14 text-xl md:text-2xl font-bold rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300 border-0 cursor-pointer"

@@ -84,10 +84,11 @@ export function useSlotAnimation(
         }, spinInterval);
         intervalsRef.current.push(interval);
 
-        // Schedule each reel to stop with stagger delay
+        // Schedule each reel to stop with stagger delay (Reverse: Right to Left)
+        const reverseIndex = ANIMATION_CONFIG.REEL_COUNT - 1 - i;
         const stopDelay =
           (ANIMATION_CONFIG.SPIN_DURATION +
-            i * ANIMATION_CONFIG.STAGGER_DELAY) /
+            reverseIndex * ANIMATION_CONFIG.STAGGER_DELAY) /
           speedMultiplier;
 
         const timeout = setTimeout(() => {
@@ -105,8 +106,8 @@ export function useSlotAnimation(
             return newReels;
           });
 
-          // Check if all reels are stopped (last reel)
-          if (i === ANIMATION_CONFIG.REEL_COUNT - 1) {
+          // Check if all reels are stopped (index 0 is the last one to stop now)
+          if (i === 0) {
             const completeTimeout = setTimeout(() => {
               setIsAnimating(false);
               onComplete?.();

@@ -46,10 +46,13 @@ export function generateMockEmployees(count: number = 100): Employee[] {
     const lastName = lastNames[i % lastNames.length];
     const department = departments[i % departments.length];
 
+    const nationality = Math.random() > 0.3 ? "Myanmar" : "Thai"; // 70% Myanmar to ensure enough candidates
+
     employees.push({
       id: generateEmployeeId(i),
       name: `${firstName} ${lastName}`,
       department,
+      nationality,
     });
   }
 

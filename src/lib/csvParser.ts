@@ -8,7 +8,7 @@ interface CSVRow {
 /**
  * Parse a CSV file and return an array of Employee objects.
  * Expects at minimum an "id" or "employee_id" or "รหัสพนักงาน" column.
- * Optional columns: "name"/"ชื่อ", "department"/"แผนก"
+ * Optional columns: "name"/"ชื่อ", "department"/"แผนก", "nationality"/"สัญชาติ"
  */
 export function parseEmployeeCSV(file: File): Promise<Employee[]> {
   return new Promise((resolve, reject) => {
@@ -44,6 +44,9 @@ export function parseEmployeeCSV(file: File): Promise<Employee[]> {
         const deptCol = headers.find((h) =>
           ["department", "dept", "แผนก"].includes(h.toLowerCase().trim())
         );
+        const natCol = headers.find((h) =>
+          ["nationality", "nat", "สัญชาติ"].includes(h.toLowerCase().trim())
+        );
 
         if (!idCol) {
           reject(
@@ -64,10 +67,19 @@ export function parseEmployeeCSV(file: File): Promise<Employee[]> {
             continue;
           }
 
+          let nationality: "Thai" | "Myanmar" = "Thai";
+          if (natCol) {
+            const val = row[natCol]?.toString().trim().toLowerCase();
+            if (val === "myanmar" || val === "burmese" || val === "พม่า" || val === "mm") {
+              nationality = "Myanmar";
+            }
+          }
+
           employees.push({
             id,
             name: nameCol ? row[nameCol]?.trim() : undefined,
             department: deptCol ? row[deptCol]?.trim() : undefined,
+            nationality,
           });
         }
 
