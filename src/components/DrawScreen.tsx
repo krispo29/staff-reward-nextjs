@@ -9,6 +9,7 @@ import { WinnerReveal } from "@/components/WinnerReveal";
 import { WinnersList } from "@/components/WinnersList";
 import { useDrawStore } from "@/store/drawStore";
 import { useSlotAnimation } from "@/hooks/useSlotAnimation";
+import { soundManager } from "@/lib/audioUtils";
 import {
   PlayCircle,
   FastForwardCircle,
@@ -42,17 +43,33 @@ export function DrawScreen() {
 
   const [showEntrantsModal, setShowEntrantsModal] = React.useState(false);
 
+  // Sync sound setting
+  React.useEffect(() => {
+    soundManager.setEnabled(settings.soundEnabled);
+  }, [settings.soundEnabled]);
+
   const onAnimationComplete = useCallback(() => {
     revealWinner();
+    soundManager.stopAmbientHum();
+    soundManager.playWin();
   }, [revealWinner]);
 
+  const onTick = useCallback(() => {
+    soundManager.playSpin();
+  }, []);
+
+  const onReelStop = useCallback(() => {
+    soundManager.playReelStop();
+  }, []);
+
   const { reels, isAnimating, startAnimation, resetAnimation } =
-    useSlotAnimation(onAnimationComplete);
+    useSlotAnimation(onAnimationComplete, onTick, onReelStop);
 
   const handleDraw = useCallback(() => {
     drawWinner();
     const state = useDrawStore.getState();
     if (state.currentWinner) {
+      soundManager.startAmbientHum();
       startAnimation(state.currentWinner.id, settings.animationSpeed);
     }
   }, [drawWinner, startAnimation, settings.animationSpeed]);

@@ -26,7 +26,9 @@ const initialReelState = (): ReelState => ({
 });
 
 export function useSlotAnimation(
-  onComplete?: () => void
+  onComplete?: () => void,
+  onTick?: () => void,
+  onReelStop?: () => void
 ): UseSlotAnimationReturn {
   const [reels, setReels] = useState<ReelState[]>(
     Array.from({ length: ANIMATION_CONFIG.REEL_COUNT }, initialReelState)
@@ -71,6 +73,7 @@ export function useSlotAnimation(
 
       for (let i = 0; i < ANIMATION_CONFIG.REEL_COUNT; i++) {
         const interval = setInterval(() => {
+          onTick?.();
           setReels((prev) => {
             const newReels = [...prev];
             if (newReels[i].isSpinning && !newReels[i].isStopped) {
@@ -103,6 +106,7 @@ export function useSlotAnimation(
               isSpinning: false,
               isStopped: true,
             };
+            onReelStop?.();
             return newReels;
           });
 
@@ -118,7 +122,7 @@ export function useSlotAnimation(
         timeoutsRef.current.push(timeout);
       }
     },
-    [clearAllTimers, onComplete]
+    [clearAllTimers, onComplete, onTick, onReelStop]
   );
 
   const resetAnimation = useCallback(() => {
