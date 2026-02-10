@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button"; // Assumed existing button component
 import { Employee } from "@/types/employee";
 import { CheckCircle, XCircle } from "@phosphor-icons/react";
@@ -23,6 +23,9 @@ export function WinnerModal({ winner, isOpen, onAccept, onReject }: WinnerModalP
           
           {/* Header */}
           <div className="bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-yellow-500/20 border-b border-white/10 p-4 text-center">
+             <DialogDescription className="sr-only">
+               รายละเอียดผู้โชคดีที่ได้รับรางวัล 10,000 บาท
+             </DialogDescription>
              <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
                 <DialogTitle className="text-xl md:text-2xl font-bold text-white drop-shadow-md flex items-center gap-2">
                   🎉 <span>ยินดีด้วย!</span>
