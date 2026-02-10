@@ -39,11 +39,18 @@ export function WinnerCard({ winner, index, isLatest }: WinnerCardProps) {
         <p className="text-lg md:text-xl font-bold text-white tabular-nums tracking-wider">
           {winner.id}
         </p>
-        {winner.name && (
-          <p className="text-sm md:text-base text-blue-300/70 truncate">
-            {winner.name}
-          </p>
-        )}
+        <div className="flex flex-col">
+          {winner.name && (
+            <p className="text-sm md:text-base text-blue-300/90 truncate font-medium">
+              {winner.name}
+            </p>
+          )}
+          {(winner.position || winner.plant) && (
+            <p className="text-xs text-white/50 truncate mt-0.5">
+              {[winner.position, winner.plant].filter(Boolean).join(" • ")}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Trophy for latest */}

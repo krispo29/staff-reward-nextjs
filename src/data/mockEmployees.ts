@@ -33,10 +33,6 @@ const lastNames = [
   "บุญมี", "รักดี", "สุข", "สันต์", "สมาน",
 ];
 
-function generateEmployeeId(index: number): string {
-  // Generate 7-digit IDs starting from 2210001
-  return (2210001 + index).toString();
-}
 
 export function generateMockEmployees(count: number = 100): Employee[] {
   const employees: Employee[] = [];
@@ -46,12 +42,18 @@ export function generateMockEmployees(count: number = 100): Employee[] {
     const lastName = lastNames[i % lastNames.length];
     const department = departments[i % departments.length];
 
-    const nationality = Math.random() > 0.3 ? "Myanmar" : "Thai"; // 70% Myanmar to ensure enough candidates
+    const nationality = Math.random() > 0.3 ? "Myanmar" : "Thai";
+    const plant = i % 2 === 0 ? "Bangkok Plant" : "Rayong Plant";
+    const section = i % 3 === 0 ? "Production" : i % 3 === 1 ? "Quality" : "Logistics";
+    const position = i % 5 === 0 ? "Supervisor" : "Operator";
 
     employees.push({
-      id: generateEmployeeId(i),
+      id: (2210001 + i).toString(),
       name: `${firstName} ${lastName}`,
       department,
+      plant,
+      section,
+      position,
       nationality,
     });
   }

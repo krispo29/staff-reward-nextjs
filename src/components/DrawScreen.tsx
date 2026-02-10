@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { SlotMachine } from "@/components/SlotMachine";
 import { DrawCounter } from "@/components/DrawCounter";
-import { WinnerReveal } from "@/components/WinnerReveal";
 import { WinnersList } from "@/components/WinnersList";
+import { WinnerModal } from "@/components/WinnerModal";
 import { useDrawStore } from "@/store/drawStore";
 import { useSlotAnimation } from "@/hooks/useSlotAnimation";
 import { soundManager } from "@/lib/audioUtils";
@@ -15,7 +15,6 @@ import {
   FastForwardCircle,
   ArrowCounterClockwise,
   Confetti,
-  CheckCircle,
   XCircle,
   WarningCircle,
   ListMagnifyingGlass,
@@ -125,8 +124,13 @@ export function DrawScreen() {
         {/* Slot Machine */}
         <SlotMachine reels={reels} isAnimating={isAnimating} />
 
-        {/* Winner reveal */}
-        <WinnerReveal winner={currentWinner} isRevealed={isShowWinner} />
+        {/* Winner Modal */}
+        <WinnerModal
+          isOpen={isRevealed}
+          winner={currentWinner}
+          onAccept={acceptWinner}
+          onReject={rejectWinner}
+        />
 
         <EntrantsModal
           isOpen={showEntrantsModal}
@@ -163,25 +167,6 @@ export function DrawScreen() {
               >
                 <PlayCircle weight="duotone" className="w-7 h-7 mr-2" />
                 จับรางวัล
-              </Button>
-            </div>
-          )}
-
-          {isRevealed && (
-            <div className="flex gap-4">
-              <Button
-                onClick={rejectWinner}
-                className="h-16 md:h-20 px-8 text-xl font-bold rounded-2xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/50 hover:border-red-400 transition-all duration-300 cursor-pointer"
-              >
-                <XCircle weight="duotone" className="w-7 h-7 mr-2" />
-                สละสิทธิ์
-              </Button>
-              <Button
-                onClick={acceptWinner}
-                className="h-16 md:h-20 px-10 text-xl font-bold rounded-2xl bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/20 transition-all duration-300 cursor-pointer"
-              >
-                <CheckCircle weight="duotone" className="w-7 h-7 mr-2" />
-                รับรางวัล
               </Button>
             </div>
           )}

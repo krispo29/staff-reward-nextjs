@@ -18,11 +18,22 @@ import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
 interface EmployeeRow {
   id: string;
   name: string;
+  plant: string;
   department: string;
+  section: string;
+  position: string;
   nationality: "Thai" | "Myanmar";
 }
 
-const emptyRow: EmployeeRow = { id: "", name: "", department: "", nationality: "Thai" };
+const emptyRow: EmployeeRow = {
+  id: "",
+  name: "",
+  plant: "",
+  department: "",
+  section: "",
+  position: "",
+  nationality: "Thai",
+};
 
 export function ManualEmployeeEntry() {
   const { employees, loadEmployees } = useDrawStore();
@@ -84,7 +95,10 @@ export function ManualEmployeeEntry() {
     const newEmployees: Employee[] = validRows.map((row) => ({
       id: row.id.trim(),
       name: row.name.trim() || undefined,
+      plant: row.plant.trim() || undefined,
       department: row.department.trim() || undefined,
+      section: row.section.trim() || undefined,
+      position: row.position.trim() || undefined,
       nationality: row.nationality,
     }));
 
@@ -127,10 +141,13 @@ export function ManualEmployeeEntry() {
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[80px_1fr_1fr_100px_36px] gap-2 text-xs text-white/50 font-medium px-1">
+      <div className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr_1fr_90px_36px] gap-2 text-xs text-white/50 font-medium px-1">
         <span>รหัส (7 หลัก)</span>
         <span>ชื่อ-สกุล</span>
+        <span>Plant</span>
         <span>แผนก</span>
+        <span>Section</span>
+        <span>ตำแหน่ง</span>
         <span>สัญชาติ</span>
         <span></span>
       </div>
@@ -142,7 +159,7 @@ export function ManualEmployeeEntry() {
             key={index}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-[80px_1fr_1fr_100px_36px] gap-2 relative"
+            className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr_1fr_90px_36px] gap-2 relative"
             style={{ zIndex: openDropdown === index ? 50 : 1 }}
           >
             <input
@@ -164,9 +181,30 @@ export function ManualEmployeeEntry() {
             />
             <input
               type="text"
+              value={row.plant}
+              onChange={(e) => updateRow(index, "plant", e.target.value)}
+              placeholder="Plant"
+              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+            />
+            <input
+              type="text"
               value={row.department}
               onChange={(e) => updateRow(index, "department", e.target.value)}
               placeholder="แผนก"
+              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+            />
+            <input
+              type="text"
+              value={row.section}
+              onChange={(e) => updateRow(index, "section", e.target.value)}
+              placeholder="Section"
+              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+            />
+            <input
+              type="text"
+              value={row.position}
+              onChange={(e) => updateRow(index, "position", e.target.value)}
+              placeholder="ตำแหน่ง"
               className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
             />
             

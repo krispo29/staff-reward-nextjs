@@ -2,6 +2,9 @@ export interface Employee {
   id: string; // 7-digit employee ID, e.g., "2210053"
   name?: string;
   department?: string;
+  plant?: string;
+  section?: string;
+  position?: string;
   nationality?: "Thai" | "Myanmar";
 }
 

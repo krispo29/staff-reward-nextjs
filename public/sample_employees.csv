@@ -1,21 +1,11 @@
-id,name,department,nationality
-2210001,สมชาย สุขใจ,Engineering,Thai
-2210002,สมหญิง ใจดี,Marketing,Thai
-2210003,วิชัย มั่นคง,Sales,Thai
-2210004,วิภา เจริญ,HR,Thai
-2210005,ประเสริฐ รุ่งเรือง,Finance,Thai
-2210006,ประภา สว่าง,Operations,Thai
-2210007,สุรชัย แก้ว,IT Support,Thai
-2210008,สุภา ทอง,R&D,Thai
-2210009,อนุชา เงิน,Customer Service,Myanmar
-2210010,อรุณี ดี,Legal,Myanmar
-2210011,กิตติ สมบูรณ์,Engineering,Thai
-2210012,กัลยา พัฒนา,Marketing,Thai
-2210013,ธนา ก้าวหน้า,Sales,Thai
-2210014,ธนิดา มงคล,HR,Thai
-2210015,พิชัย ศรี,Finance,Thai
-2210016,พิมพ์ บุญมี,Operations,Myanmar
-2210017,ชัยวัฒน์ รักดี,IT Support,Myanmar
-2210018,ชลธิชา สุข,R&D,Myanmar
-2210019,นิรันดร์ สันต์,Customer Service,Myanmar
-2210020,นารี สมาน,Legal,Myanmar
+id,name,plant,department,section,position,nationality
+2210001,Somchai Jai-dee,Bangkok Plant,Production,Assembly,Operator,Thai
+2210002,Aung Kyaw,Bangkok Plant,Production,Packaging,Operator,Myanmar
+2210003,Somsri Rak-ngan,Rayong Plant,HR,Recruitment,HR Officer,Thai
+2210004,Kyaw Min,Rayong Plant,Logistics,Warehouse,Forklift Driver,Myanmar
+2210005,John Doe,Bangkok Plant,Engineering,Maintenance,Engineer,Thai
+2210006,Jane Smith,Bangkok Plant,Quality,QA,QA Supervisor,Thai
+2210007,Mya Tun,Rayong Plant,Production,Assembly,Operator,Myanmar
+2210008,Prasit Srisuk,Bangkok Plant,Production,Assembly,Line Leader,Thai
+2210009,Win Htut,Rayong Plant,Logistics,Warehouse,Worker,Myanmar
+2210010,Thida Win,Bangkok Plant,Quality,QC,QC Inspector,Myanmar

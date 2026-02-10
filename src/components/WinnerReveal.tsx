@@ -76,54 +76,95 @@ export function WinnerReveal({ winner, isRevealed }: WinnerRevealProps) {
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className="flex flex-col items-center gap-3 mt-6"
         >
-          {/* Winner badge */}
+
+          {/* Unified Winner Card */}
           <motion.div
-            className="px-6 py-2 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-400/30"
-            animate={{
-              boxShadow: [
-                "0 0 10px rgba(16, 185, 129, 0.2)",
-                "0 0 25px rgba(16, 185, 129, 0.4)",
-                "0 0 10px rgba(16, 185, 129, 0.2)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
+            className="w-full max-w-2xl mx-auto mt-4 md:mt-6 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden"
           >
-            <span className="text-lg md:text-xl font-bold text-emerald-400">
-              🎉 ยินดีด้วย! 🎉
-            </span>
+            {/* Header: Congratulations & Prize */}
+            <div className="bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-yellow-500/20 border-b border-white/10 p-4 text-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-yellow-400/5 blur-xl"></div>
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4"
+              >
+                <span className="text-xl md:text-2xl font-bold text-white drop-shadow-md">
+                  🎉 ยินดีด้วย!
+                </span>
+                <span className="hidden md:block text-white/30 text-lg">|</span>
+                <span className="text-lg md:text-xl font-bold text-yellow-300 drop-shadow-md">
+                  🏆 รางวัล 10,000 บาท
+                </span>
+              </motion.div>
+            </div>
+
+            {/* Body: Employee Details */}
+            <div className="p-6 md:p-8 space-y-6">
+              
+              {/* ID & Name Row */}
+              <div className="flex flex-col items-center justify-center text-center space-y-2">
+                <div className="space-y-1">
+                  <span className="block text-white/40 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em]">
+                    Employee ID
+                  </span>
+                  <span className="block text-4xl md:text-6xl font-black text-white tracking-widest tabular-nums filter drop-shadow-lg">
+                    {winner.id}
+                  </span>
+                </div>
+                
+                <div className="w-12 h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full my-2"></div>
+                
+                <div className="space-y-1">
+                  <span className="block text-2xl md:text-4xl font-bold text-blue-300 filter drop-shadow-lg">
+                    {winner.name || "-"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-white/10">
+                {/* Plant */}
+                <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                  <span className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Plant</span>
+                  <span className="text-white font-medium text-sm md:text-base leading-tight">
+                    {winner.plant || "-"}
+                  </span>
+                </div>
+
+                {/* Department */}
+                <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                  <span className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Department</span>
+                  <span className="text-white font-medium text-sm md:text-base leading-tight">
+                    {winner.department || "-"}
+                  </span>
+                </div>
+
+                {/* Section */}
+                <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                  <span className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Section</span>
+                  <span className="text-white font-medium text-sm md:text-base leading-tight">
+                    {winner.section || "-"}
+                  </span>
+                </div>
+
+                {/* Position */}
+                <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex flex-col items-center justify-center text-center hover:bg-white/10 transition-colors">
+                  <span className="text-white/40 text-[10px] uppercase tracking-wider mb-1">Position</span>
+                  <span className="text-white font-medium text-sm md:text-base leading-tight">
+                    {winner.position || "-"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Subtle Footer Decoration */}
+            <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50"></div>
           </motion.div>
-
-          {/* Winner details */}
-          {winner.name && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-2xl md:text-3xl font-bold text-white"
-            >
-              {winner.name}
-            </motion.p>
-          )}
-
-          {winner.department && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-lg md:text-xl text-blue-300/70"
-            >
-              แผนก: {winner.department}
-            </motion.p>
-          )}
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-400"
-          >
-            🏆 รางวัล 10,000 บาท
-          </motion.p>
         </motion.div>
       )}
     </AnimatePresence>

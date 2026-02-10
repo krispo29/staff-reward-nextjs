@@ -11,10 +11,15 @@ export function StartScreen() {
   const { loadEmployees, startDraw, employees } = useDrawStore();
 
   useEffect(() => {
-    if (employees.length === 0) {
+    // Load mock data if empty OR if the data seems stale (missing any new field)
+    const firstEmp = employees[0];
+    const isStale = firstEmp && (!firstEmp.plant || !firstEmp.section || !firstEmp.position);
+
+    if (employees.length === 0 || isStale) {
+      console.log("Found stale data. Reloading mock data with new fields...");
       loadEmployees(mockEmployees);
     }
-  }, [employees.length, loadEmployees]);
+  }, [employees.length, loadEmployees, employees]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 md:gap-12 text-center w-full max-w-3xl mx-auto">

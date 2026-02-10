@@ -8,7 +8,7 @@ interface CSVRow {
 /**
  * Parse a CSV file and return an array of Employee objects.
  * Expects at minimum an "id" or "employee_id" or "รหัสพนักงาน" column.
- * Optional columns: "name"/"ชื่อ", "department"/"แผนก", "nationality"/"สัญชาติ"
+ * Optional columns: "name", "department", "plant", "section", "position", "nationality"
  */
 export function parseEmployeeCSV(file: File): Promise<Employee[]> {
   return new Promise((resolve, reject) => {
@@ -47,6 +47,15 @@ export function parseEmployeeCSV(file: File): Promise<Employee[]> {
         const natCol = headers.find((h) =>
           ["nationality", "nat", "สัญชาติ"].includes(h.toLowerCase().trim())
         );
+        const plantCol = headers.find((h) =>
+          ["plant", "factory", "site", "ที่ทำงาน", "โรงงาน"].includes(h.toLowerCase().trim())
+        );
+        const sectCol = headers.find((h) =>
+          ["section", "sect", "ส่วนงาน", "ส่วน"].includes(h.toLowerCase().trim())
+        );
+        const posCol = headers.find((h) =>
+          ["position", "pos", "job", "job title", "ตำแหน่ง"].includes(h.toLowerCase().trim())
+        );
 
         if (!idCol) {
           reject(
@@ -79,6 +88,9 @@ export function parseEmployeeCSV(file: File): Promise<Employee[]> {
             id,
             name: nameCol ? row[nameCol]?.trim() : undefined,
             department: deptCol ? row[deptCol]?.trim() : undefined,
+            plant: plantCol ? row[plantCol]?.trim() : undefined,
+            section: sectCol ? row[sectCol]?.trim() : undefined,
+            position: posCol ? row[posCol]?.trim() : undefined,
             nationality,
           });
         }
