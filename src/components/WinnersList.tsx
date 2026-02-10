@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Employee } from "@/types/employee";
 import { WinnerCard } from "./WinnerCard";
-import { Trophy } from "lucide-react";
+import { Trophy } from "@phosphor-icons/react";
 
 interface WinnersListProps {
   winners: Employee[];
@@ -20,7 +20,7 @@ export function WinnersList({ winners }: Readonly<WinnersListProps>) {
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-        <Trophy className="w-5 h-5 text-yellow-400" />
+        <Trophy weight="duotone" className="w-5 h-5 text-yellow-400" />
         <h2 className="text-lg md:text-xl font-bold text-white">
           รายชื่อผู้โชคดี
         </h2>

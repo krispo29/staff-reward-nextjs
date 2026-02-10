@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Employee } from "@/types/employee";
-import { Trophy } from "lucide-react";
+import { Trophy } from "@phosphor-icons/react";
 
 interface WinnerCardProps {
   winner: Employee;
@@ -52,7 +52,7 @@ export function WinnerCard({ winner, index, isLatest }: WinnerCardProps) {
           animate={{ rotate: [0, 10, -10, 0] }}
           transition={{ duration: 1, repeat: 2 }}
         >
-          <Trophy className="w-5 h-5 text-yellow-400" />
+          <Trophy weight="duotone" className="w-5 h-5 text-yellow-400" />
         </motion.div>
       )}
     </motion.div>

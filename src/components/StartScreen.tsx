@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useDrawStore } from "@/store/drawStore";
 import { mockEmployees } from "@/data/mockEmployees";
-import { Trophy, Sparkles, Users } from "lucide-react";
+import { Trophy, Sparkle, Users, Sparkle as SparklesAlias } from "@phosphor-icons/react";
 
 export function StartScreen() {
   const { loadEmployees, startDraw, employees } = useDrawStore();
@@ -37,7 +37,7 @@ export function StartScreen() {
             ease: "easeInOut",
           }}
         >
-          <Trophy className="w-12 h-12 md:w-16 md:h-16 text-white" />
+          <Trophy weight="duotone" className="w-12 h-12 md:w-16 md:h-16 text-white" />
         </motion.div>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-300">
@@ -56,7 +56,7 @@ export function StartScreen() {
         className="flex flex-col md:flex-row items-center gap-4 md:gap-8"
       >
         <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-          <Sparkles className="w-6 h-6 text-yellow-400" />
+          <Sparkle weight="duotone" className="w-6 h-6 text-yellow-400" />
           <div className="text-left">
             <p className="text-sm text-blue-300/70">รางวัลละ</p>
             <p className="text-2xl md:text-3xl font-bold text-white">
@@ -67,7 +67,7 @@ export function StartScreen() {
         </div>
 
         <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-          <Trophy className="w-6 h-6 text-emerald-400" />
+          <Trophy weight="duotone" className="w-6 h-6 text-emerald-400" />
           <div className="text-left">
             <p className="text-sm text-blue-300/70">จำนวน</p>
             <p className="text-2xl md:text-3xl font-bold text-white">
@@ -78,7 +78,7 @@ export function StartScreen() {
         </div>
 
         <div className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-          <Users className="w-6 h-6 text-blue-400" />
+          <Users weight="duotone" className="w-6 h-6 text-blue-400" />
           <div className="text-left">
             <p className="text-sm text-blue-300/70">ผู้มีสิทธิ์</p>
             <p className="text-2xl md:text-3xl font-bold text-white">
@@ -100,7 +100,7 @@ export function StartScreen() {
           disabled={employees.length === 0}
           className="h-20 md:h-24 px-12 md:px-16 text-2xl md:text-3xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 border-0 cursor-pointer"
         >
-          <Sparkles className="w-8 h-8 mr-3" />
+          <SparklesAlias weight="duotone" className="w-8 h-8 mr-3" />
           เริ่มจับรางวัล
         </Button>
       </motion.div>

@@ -6,11 +6,11 @@ import { useDrawStore } from "@/store/drawStore";
 import { Employee } from "@/types/employee";
 import {
   UserPlus,
-  Trash2,
+  Trash,
   CheckCircle,
-  AlertCircle,
+  WarningCircle,
   Plus,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 
 interface EmployeeRow {
@@ -109,7 +109,7 @@ export function ManualEmployeeEntry() {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-        <UserPlus className="w-5 h-5 text-blue-400" />
+        <UserPlus weight="duotone" className="w-5 h-5 text-blue-400" />
         กรอกข้อมูลพนักงาน
       </h3>
 
@@ -164,7 +164,7 @@ export function ManualEmployeeEntry() {
               disabled={rows.length <= 1}
               className="flex items-center justify-center w-8 h-8 rounded-md text-white/40 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30 disabled:hover:text-white/40 disabled:hover:bg-transparent transition-colors cursor-pointer"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash weight="duotone" className="w-4 h-4" />
             </button>
           </motion.div>
         ))}
@@ -175,7 +175,7 @@ export function ManualEmployeeEntry() {
         onClick={addRow}
         className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-white/20 text-white/50 hover:text-blue-300 hover:border-blue-400/30 hover:bg-blue-500/5 transition-colors text-sm cursor-pointer"
       >
-        <Plus className="w-4 h-4" />
+        <Plus weight="bold" className="w-4 h-4" />
         เพิ่มแถว
       </button>
 
@@ -185,7 +185,7 @@ export function ManualEmployeeEntry() {
           onClick={handleSubmit}
           className="flex-1 h-10 text-sm bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
         >
-          <UserPlus className="w-4 h-4 mr-1.5" />
+          <UserPlus weight="bold" className="w-4 h-4 mr-1.5" />
           เพิ่มพนักงาน
         </Button>
         <Button
@@ -211,9 +211,9 @@ export function ManualEmployeeEntry() {
             }`}
           >
             {status.type === "success" ? (
-              <CheckCircle className="w-4 h-4 flex-shrink-0" />
+              <CheckCircle weight="duotone" className="w-4 h-4 flex-shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <WarningCircle weight="duotone" className="w-4 h-4 flex-shrink-0" />
             )}
             <span>{status.message}</span>
           </motion.div>

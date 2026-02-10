@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useDrawStore } from "@/store/drawStore";
-import { Gauge, Volume2, VolumeX, Sparkles } from "lucide-react";
+import { Gauge, SpeakerHigh, SpeakerX, Sparkle } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 
 export function Settings() {
@@ -15,7 +15,7 @@ export function Settings() {
       {/* Animation speed */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-white/80">
-          <Gauge className="w-4 h-4" />
+          <Gauge weight="duotone" className="w-4 h-4" />
           <span className="text-sm font-medium">ความเร็วแอนิเมชัน</span>
         </div>
         <div className="flex gap-2">
@@ -45,9 +45,9 @@ export function Settings() {
       <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
         <div className="flex items-center gap-2 text-white/80">
           {settings.soundEnabled ? (
-            <Volume2 className="w-4 h-4" />
+            <SpeakerHigh weight="duotone" className="w-4 h-4" />
           ) : (
-            <VolumeX className="w-4 h-4" />
+            <SpeakerX weight="duotone" className="w-4 h-4" />
           )}
           <span className="text-sm font-medium">เสียง</span>
         </div>
@@ -70,7 +70,7 @@ export function Settings() {
       {/* Confetti toggle */}
       <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
         <div className="flex items-center gap-2 text-white/80">
-          <Sparkles className="w-4 h-4" />
+          <Sparkle weight="duotone" className="w-4 h-4" />
           <span className="text-sm font-medium">เอฟเฟกต์ Confetti</span>
         </div>
         <button

@@ -4,7 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDrawStore } from "@/store/drawStore";
 import { parseEmployeeCSV } from "@/lib/csvParser";
-import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { UploadSimple, FileCsv, CheckCircle, WarningCircle } from "@phosphor-icons/react";
 
 export function EmployeeImport() {
   const { loadEmployees } = useDrawStore();
@@ -80,7 +80,8 @@ export function EmployeeImport() {
             : "border-white/20 bg-white/5 hover:border-white/30 hover:bg-white/8"
         }`}
       >
-        <Upload
+        <UploadSimple
+          weight="duotone"
           className={`w-10 h-10 ${isDragging ? "text-blue-400" : "text-white/50"}`}
         />
         <p className="text-base text-white/70 text-center">
@@ -104,7 +105,7 @@ export function EmployeeImport() {
 
       {/* CSV format hint */}
       <div className="flex items-start gap-2 p-3 rounded-lg bg-white/5 border border-white/10">
-        <FileText className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+        <FileCsv weight="duotone" className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <div className="text-sm text-white/60">
           <p className="font-medium text-white/80 mb-1">รูปแบบไฟล์ CSV:</p>
           <code className="text-xs bg-white/10 px-2 py-1 rounded">
@@ -128,9 +129,9 @@ export function EmployeeImport() {
             }`}
           >
             {status.type === "success" ? (
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle weight="duotone" className="w-5 h-5" />
             ) : (
-              <AlertCircle className="w-5 h-5" />
+              <WarningCircle weight="duotone" className="w-5 h-5" />
             )}
             <span className="text-sm">
               {status.message}

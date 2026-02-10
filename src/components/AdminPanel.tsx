@@ -17,15 +17,15 @@ import { EmployeeImport } from "./EmployeeImport";
 import { ManualEmployeeEntry } from "./ManualEmployeeEntry";
 import { Settings } from "./Settings";
 import {
-  Settings as SettingsIcon,
-  RotateCcw,
-  Download,
+  Gear,
+  ArrowCounterClockwise,
+  DownloadSimple,
   Printer,
-  ChevronDown,
-  ChevronUp,
+  CaretDown,
+  CaretUp,
   X,
   UserPlus,
-} from "lucide-react";
+} from "@phosphor-icons/react";
 
 export function AdminPanel() {
   const { winners, reset, employees } = useDrawStore();
@@ -52,7 +52,7 @@ export function AdminPanel() {
           size="icon"
           className="h-12 w-12 rounded-full bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm cursor-pointer"
         >
-          {isOpen ? <X className="w-5 h-5" /> : <SettingsIcon className="w-5 h-5" />}
+          {isOpen ? <X weight="bold" className="w-5 h-5" /> : <Gear weight="duotone" className="w-5 h-5" />}
         </Button>
       </motion.div>
 
@@ -76,7 +76,7 @@ export function AdminPanel() {
                   variant="outline"
                   className="h-14 flex flex-col gap-1 bg-white/5 border-white/10 text-white hover:bg-red-500/10 hover:border-red-400/30 hover:text-red-400 cursor-pointer"
                 >
-                  <RotateCcw className="w-5 h-5" />
+                  <ArrowCounterClockwise weight="duotone" className="w-5 h-5" />
                   <span className="text-xs">เริ่มใหม่</span>
                 </Button>
 
@@ -86,7 +86,7 @@ export function AdminPanel() {
                   disabled={winners.length === 0}
                   className="h-14 flex flex-col gap-1 bg-white/5 border-white/10 text-white hover:bg-emerald-500/10 hover:border-emerald-400/30 hover:text-emerald-400 cursor-pointer disabled:opacity-50"
                 >
-                  <Download className="w-5 h-5" />
+                  <DownloadSimple weight="duotone" className="w-5 h-5" />
                   <span className="text-xs">Export CSV</span>
                 </Button>
 
@@ -96,7 +96,7 @@ export function AdminPanel() {
                   disabled={winners.length === 0}
                   className="h-14 flex flex-col gap-1 bg-white/5 border-white/10 text-white hover:bg-blue-500/10 hover:border-blue-400/30 hover:text-blue-400 cursor-pointer disabled:opacity-50"
                 >
-                  <Printer className="w-5 h-5" />
+                  <Printer weight="duotone" className="w-5 h-5" />
                   <span className="text-xs">พิมพ์</span>
                 </Button>
 
@@ -115,9 +115,9 @@ export function AdminPanel() {
                 >
                   <span className="font-medium">นำเข้าข้อมูลพนักงาน</span>
                   {activeSection === "import" ? (
-                    <ChevronUp className="w-4 h-4" />
+                    <CaretUp weight="bold" className="w-4 h-4" />
                   ) : (
-                    <ChevronDown className="w-4 h-4" />
+                    <CaretDown weight="bold" className="w-4 h-4" />
                   )}
                 </button>
                 <AnimatePresence>
@@ -142,13 +142,13 @@ export function AdminPanel() {
                   className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/8 transition-colors cursor-pointer"
                 >
                   <span className="font-medium flex items-center gap-2">
-                    <UserPlus className="w-4 h-4 text-blue-400" />
+                    <UserPlus weight="duotone" className="w-4 h-4 text-blue-400" />
                     กรอกข้อมูลพนักงาน
                   </span>
                   {activeSection === "manual" ? (
-                    <ChevronUp className="w-4 h-4" />
+                    <CaretUp weight="bold" className="w-4 h-4" />
                   ) : (
-                    <ChevronDown className="w-4 h-4" />
+                    <CaretDown weight="bold" className="w-4 h-4" />
                   )}
                 </button>
                 <AnimatePresence>
@@ -174,9 +174,9 @@ export function AdminPanel() {
                 >
                   <span className="font-medium">ตั้งค่า</span>
                   {activeSection === "settings" ? (
-                    <ChevronUp className="w-4 h-4" />
+                    <CaretUp weight="bold" className="w-4 h-4" />
                   ) : (
-                    <ChevronDown className="w-4 h-4" />
+                    <CaretDown weight="bold" className="w-4 h-4" />
                   )}
                 </button>
                 <AnimatePresence>
