@@ -20,7 +20,6 @@ import {
   ListMagnifyingGlass,
 } from "@phosphor-icons/react";
 import { EntrantsModal } from "./EntrantsModal";
-import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
 
 export function DrawScreen() {
   const {
@@ -98,19 +97,8 @@ export function DrawScreen() {
 
         {/* Quota Counter */}
         <div className="flex gap-4 text-sm font-medium">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300">
-            <FlagThai className="w-5 h-auto rounded-[2px]" />
-            <span>ไทย:</span>
-            <span className="font-bold">
-              {winners.filter((w) => (w.nationality || "Thai") === "Thai").length} / {settings.quotas.Thai}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-            <FlagMyanmar className="w-5 h-auto rounded-[2px]" />
-            <span>พม่า:</span>
-            <span className="font-bold">
-              {winners.filter((w) => w.nationality === "Myanmar").length} / {settings.quotas.Myanmar}
-            </span>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300">
+             <span className="font-bold">Department Quota Active</span>
           </div>
           <button
             onClick={() => setShowEntrantsModal(true)}

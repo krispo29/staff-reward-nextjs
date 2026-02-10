@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, MagnifyingGlass, User, Users } from "@phosphor-icons/react";
 import { useDrawStore } from "@/store/drawStore";
 import { Employee } from "@/types/employee";
-import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
 
 interface EntrantsModalProps {
   isOpen: boolean;
@@ -112,27 +111,18 @@ export function EntrantsModal({ isOpen, onClose }: EntrantsModalProps) {
                             <span className="text-white font-mono font-medium">
                               {emp.id}
                             </span>
-                            {emp.nationality && (
-                              <span className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-white/70 border border-white/10">
-                                {emp.nationality === "Thai" ? (
-                                  <>
-                                    <FlagThai className="w-3 h-auto rounded-[1px]" />
-                                    <span>ไทย</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <FlagMyanmar className="w-3 h-auto rounded-[1px]" />
-                                    <span>พม่า</span>
-                                  </>
-                                )}
+                            {emp.department && (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                {emp.department}
                               </span>
                             )}
                           </div>
                           <div className="text-sm text-white/60">
                             {emp.name || "-"}
-                            {emp.department && (
-                              <span className="text-white/40 mx-1">• {emp.department}</span>
-                            )}
+                             {/* Department is now in the badge above, so maybe remove it here or keep as secondary? 
+                                 Actually, moving department to a badge next to ID/Name is better. 
+                                 Let's put it next to ID as before. 
+                             */}
                           </div>
                         </div>
                       </div>

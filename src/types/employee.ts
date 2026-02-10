@@ -14,10 +14,7 @@ export interface DrawSettings {
   animationSpeed: number; // 0.5 = slow, 1 = normal, 2 = fast
   soundEnabled: boolean;
   confettiEnabled: boolean;
-  quotas: {
-    Thai: number;
-    Myanmar: number;
-  };
+  quotas: { [department: string]: number }; // Percentage (0-100) per department
 }
 
 export interface Winner extends Employee {

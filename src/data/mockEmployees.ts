@@ -1,16 +1,14 @@
 import { Employee } from "@/types/employee";
 
 const departments = [
-  "Engineering",
-  "Marketing",
-  "Sales",
+  "Production",
+  "Cutting",
+  "Common",
+  "PE",
+  "Maintenance",
+  "Admin",
+  "QA",
   "HR",
-  "Finance",
-  "Operations",
-  "IT Support",
-  "R&D",
-  "Customer Service",
-  "Legal",
 ];
 
 const firstNames = [

@@ -42,8 +42,14 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
     soundEnabled: true,
     confettiEnabled: true,
     quotas: {
-      Thai: 3,
-      Myanmar: 7,
+      "Production": 10,
+      "Cutting": 5,
+      "Common": 20,
+      "PE": 10,
+      "Maintenance": 20,
+      "Admin": 10,
+      "QA": 15,
+      "HR": 10, 
     },
   },
 
@@ -60,9 +66,9 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
     }),
 
   drawWinner: () => {
-    const { employees, winners, settings } = get();
+    const { employees, winners, settings, maxDraws } = get();
     // const winnerIds = winners.map((w) => w.id); // Removed unused
-    const winner = selectRandomWinner(employees, winners, settings.quotas);
+    const winner = selectRandomWinner(employees, winners, settings.quotas, maxDraws);
 
     if (winner) {
       set({

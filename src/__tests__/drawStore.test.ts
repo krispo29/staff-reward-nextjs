@@ -86,6 +86,37 @@ describe('drawStore', () => {
     const state = useDrawStore.getState();
     expect(state.winners).toHaveLength(0);
     expect(state.currentWinner).toBeNull();
+    expect(state.currentWinner).toBeNull();
     expect(state.drawStatus).toBe('idle');
+  });
+
+  it('respects department quotas', () => {
+    const { updateSettings, startDraw, drawWinner } = useDrawStore.getState();
+    
+    // Set Production quota to 0%
+    updateSettings({
+      quotas: {
+        "Production": 0,
+        "Cutting": 100, // Give all weight to Cutting for this test
+        "Common": 0,
+        "PE": 0,
+        "Maintenance": 0,
+        "Admin": 0,
+        "QA": 0,
+        "HR": 0
+      }
+    });
+
+    startDraw();
+    drawWinner();
+    
+    const state = useDrawStore.getState();
+    const winner = state.currentWinner;
+    
+    // If a winner is drawn, they MUST NOT be from Production
+    if (winner) {
+      expect(winner.department).not.toBe('Production');
+      expect(winner.department).toBe('Cutting');
+    }
   });
 });

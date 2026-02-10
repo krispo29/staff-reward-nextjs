@@ -25,6 +25,7 @@ describe('mockEmployees', () => {
     const employees = generateMockEmployees(20);
     employees.forEach((emp) => {
       expect(['Bangkok Plant', 'Rayong Plant']).toContain(emp.plant);
+      expect(['Production', 'Cutting', 'Common', 'PE', 'Maintenance', 'Admin', 'QA', 'HR']).toContain(emp.department);
       expect(['Production', 'Quality', 'Logistics']).toContain(emp.section);
       expect(['Supervisor', 'Operator']).toContain(emp.position);
       expect(['Thai', 'Myanmar']).toContain(emp.nationality);
