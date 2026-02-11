@@ -40,6 +40,7 @@ export function DrawScreen() {
   } = useDrawStore();
 
   const [showEntrantsModal, setShowEntrantsModal] = React.useState(false);
+  const [showQuotaTooltip, setShowQuotaTooltip] = React.useState(false);
 
   // Sync sound setting
   React.useEffect(() => {
@@ -89,17 +90,64 @@ export function DrawScreen() {
   const isIdle = drawStatus === "idle" && !isAnimating;
 
   return (
-    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-10 w-full max-w-7xl mx-auto">
+    <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 lg:gap-8 w-full max-w-7xl mx-auto px-4 overflow-hidden">
       {/* Main draw area */}
-      <div className="flex-1 flex flex-col items-center gap-6 md:gap-8">
+      <div className="flex-1 min-w-0 flex flex-col items-center gap-6 md:gap-8">
+        {/* Header */}
+        <div className="flex flex-col items-center">
+          <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-300 drop-shadow-sm">
+            NEW YEAR PARTY
+          </h1>
+          <p className="text-blue-200/60 text-sm tracking-widest font-medium">STAFF REWARD 2026</p>
+        </div>
+
         {/* Draw counter */}
         <DrawCounter currentDraw={currentDraw} maxDraws={maxDraws} />
 
         {/* Quota Counter */}
         <div className="flex gap-4 text-sm font-medium">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300">
-             <span className="font-bold">Department Quota Active</span>
+          <div
+            className="relative"
+            onMouseEnter={() => setShowQuotaTooltip(true)}
+            onMouseLeave={() => setShowQuotaTooltip(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setShowQuotaTooltip((v) => !v)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 hover:bg-purple-500/20 transition-colors cursor-pointer"
+            >
+              <span className="font-bold">Department Quota Active</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className={`w-3.5 h-3.5 transition-transform ${showQuotaTooltip ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+              </svg>
+            </button>
+
+            {/* Tooltip dropdown */}
+            {showQuotaTooltip && (
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50 min-w-[220px] p-3 rounded-xl bg-gray-900/95 border border-purple-500/30 shadow-2xl shadow-purple-500/10 backdrop-blur-xl">
+                <div className="text-xs text-purple-300/70 font-semibold uppercase tracking-wider mb-2 text-center">Department Quotas</div>
+                <div className="space-y-1.5">
+                  {Object.entries(settings.quotas).map(([dept, pct]) => (
+                    <div key={dept} className="flex items-center justify-between gap-4">
+                      <span className="text-white/80 text-sm truncate">{dept}</span>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className="w-16 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-purple-400 to-pink-400"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-purple-300 text-xs font-bold w-8 text-right">{pct}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Arrow pointer */}
+                <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rotate-45 bg-gray-900/95 border-l border-t border-purple-500/30" />
+              </div>
+            )}
           </div>
+
           <button
             onClick={() => setShowEntrantsModal(true)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
@@ -196,7 +244,7 @@ export function DrawScreen() {
 
       {/* Winners sidebar */}
       {winners.length > 0 && (
-        <div className="w-full lg:w-80 xl:w-96">
+        <div className="w-full lg:w-72 xl:w-80 lg:shrink-0">
           <WinnersList winners={winners} />
         </div>
       )}

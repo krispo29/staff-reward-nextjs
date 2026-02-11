@@ -17,7 +17,7 @@ export function SlotReel({
   index,
 }: SlotReelProps) {
   return (
-    <div className="relative w-[60px] h-[90px] md:w-[80px] md:h-[110px] lg:w-[100px] lg:h-[130px] overflow-hidden rounded-xl border-2 border-white/20 bg-gradient-to-b from-slate-800 to-slate-900 shadow-lg shadow-blue-500/10">
+    <div className="relative w-[60px] h-[90px] md:w-[80px] md:h-[110px] xl:w-[100px] xl:h-[130px] overflow-hidden rounded-xl border-2 border-white/20 bg-gradient-to-b from-slate-800 to-slate-900 shadow-lg shadow-blue-500/10">
       {/* Top gradient overlay */}
       <div className="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-slate-800 to-transparent z-10 pointer-events-none" />
       {/* Bottom gradient overlay */}
@@ -45,7 +45,7 @@ export function SlotReel({
         <AnimatePresence mode="popLayout">
           <motion.span
             key={`${index}-${currentDigit}-${isSpinning}`}
-            className={`text-5xl md:text-6xl lg:text-7xl font-black tabular-nums select-none ${
+            className={`text-5xl md:text-6xl xl:text-7xl font-black tabular-nums select-none ${
               isStopped
                 ? "text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 via-yellow-400 to-amber-500 drop-shadow-[0_0_15px_rgba(250,204,21,0.4)]"
                 : "text-white/80"

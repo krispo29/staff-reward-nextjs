@@ -12,10 +12,10 @@ interface SlotMachineProps {
 
 export function SlotMachine({ reels, isAnimating }: SlotMachineProps) {
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full max-w-full">
       {/* Machine frame */}
       <motion.div
-        className="relative p-3 md:p-4 lg:p-6 rounded-2xl bg-gradient-to-b from-slate-700/50 to-slate-800/50 border border-white/10 backdrop-blur-sm shadow-2xl"
+        className="relative p-3 md:p-4 lg:p-6 rounded-2xl bg-gradient-to-b from-slate-700/50 to-slate-800/50 border border-white/10 backdrop-blur-sm shadow-2xl w-full max-w-fit mx-auto"
         animate={
           isAnimating
             ? {
@@ -41,7 +41,7 @@ export function SlotMachine({ reels, isAnimating }: SlotMachineProps) {
         </div>
 
         {/* Reels container */}
-        <div className="flex gap-2 md:gap-3 lg:gap-4">
+        <div className="flex gap-2 md:gap-3 xl:gap-4">
           {reels.map((reel, index) => (
             <SlotReel
               key={index}

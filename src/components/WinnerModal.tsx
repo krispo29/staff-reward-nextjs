@@ -18,7 +18,7 @@ export function WinnerModal({ winner, isOpen, onAccept, onReject }: WinnerModalP
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
-      <DialogContent className="max-w-2xl bg-slate-900 border-white/10 p-0 overflow-hidden text-white sm:rounded-3xl">
+      <DialogContent showCloseButton={false} className="max-w-2xl bg-slate-900 border-white/10 p-0 overflow-hidden text-white sm:rounded-3xl">
         <div className="relative w-full bg-gradient-to-br from-slate-900 to-slate-800">
           
           {/* Header */}

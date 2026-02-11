@@ -46,10 +46,10 @@ export function StartScreen() {
         </motion.div>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-300">
-          จับรางวัลพนักงาน
+          New Year Party
         </h1>
-        <p className="text-xl md:text-2xl text-blue-200/80 font-medium">
-          Lucky Draw — Staff Reward
+        <p className="text-xl md:text-2xl text-blue-200/80 font-medium tracking-widest uppercase mt-2">
+          Staff Reward 2026
         </p>
       </motion.div>
 
