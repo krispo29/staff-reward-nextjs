@@ -39,10 +39,16 @@ export function DrawScreen() {
     error,
     clearError,
     isLoading,
+    fetchSettings,
   } = useDrawStore();
 
   const [showEntrantsModal, setShowEntrantsModal] = React.useState(false);
   const [showQuotaTooltip, setShowQuotaTooltip] = React.useState(false);
+
+  // Initial fetch of settings (quotas, etc) from DB
+  React.useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
 
   // Sync sound setting
   React.useEffect(() => {

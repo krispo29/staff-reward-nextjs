@@ -11,49 +11,33 @@ function selectRandomWinner(
   maxDraws: number
 ) {
   const excludeIds = new Set(winners.map((w) => w.employeeId));
+  const eligible = employees.filter((emp) => !excludeIds.has(emp.employeeId));
 
-  // 1. Calculate current counts by department
-  const currentCounts = winners.reduce((acc: any, w: any) => {
-    // We need to look up the winner's department from the employees list 
-    // because Winner model might not have department if it's just a link
-    // But wait, our Prisma Winner model DOES NOT have department, it links to Employee.
-    // So 'w.employee' should be included in the fetch.
-    const dept = w.employee?.department || "Others";
-    acc[dept] = (acc[dept] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  if (eligible.length === 0) return null;
 
-  // 2. Filter eligible employees
-  const eligible = employees.filter((emp) => {
-    // Exclude if already drawn
-    if (excludeIds.has(emp.employeeId)) return false;
-
-    // Check quota (Percentage based)
+  // Weighted Selection Logic
+  // Each candidate's weight is their department's quota percentage
+  let totalWeight = 0;
+  const weightedCandidates = eligible.map((emp) => {
     const dept = emp.department || "Others";
     const targetKey = quotas[dept] !== undefined ? dept : "Others";
     
-    const percent = quotas[targetKey] || 0;
-    const maxAllowed = Math.ceil(maxDraws * (percent / 100));
-
-    const current = currentCounts[targetKey] || 0;
+    // Weight = Quota % (default to 1 if quota is 0 or undefined to ensure everyone has a chance)
+    const weight = Math.max(quotas[targetKey] || 0, 1);
+    totalWeight += weight;
     
-    if (current < maxAllowed) return true;
-
-    return false;
+    return { emp, weight };
   });
 
-  if (eligible.length === 0) {
-    // FALLBACK: If quota blocks everyone, allow any non-winner to be drawn
-    const fallbackEligible = employees.filter((emp) => !excludeIds.has(emp.employeeId));
-    if (fallbackEligible.length === 0) return null;
-    
-    const randomIndex = Math.floor(Math.random() * fallbackEligible.length);
-    return fallbackEligible[randomIndex];
+  // Pick random based on weights
+  let r = Math.random() * totalWeight;
+  for (const item of weightedCandidates) {
+    if (r < item.weight) return item.emp;
+    r -= item.weight;
   }
 
-  // Secure Random
-  const randomIndex = Math.floor(Math.random() * eligible.length);
-  return eligible[randomIndex];
+  // Fallback
+  return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
 export async function POST(request: Request) {
@@ -74,10 +58,10 @@ export async function POST(request: Request) {
     }
 
     // Fetch necessary data
-    const [employees, winners, settings] = await Promise.all([
+    const [employees, winners, settingsList] = await Promise.all([
       prisma.employee.findMany({ where: { isActive: true } }),
       prisma.winner.findMany({ include: { employee: true } }),
-      prisma.drawSettings.findFirst()
+      prisma.drawSettings.findMany()
     ]);
 
     // Parse Settings
@@ -95,14 +79,9 @@ export async function POST(request: Request) {
     let quotas = defaultQuotas;
     let maxDraws = 10;
 
-    if (settings && settings.valueJson) {
-        const parsed = settings.valueJson as any;
-        if (parsed.quotas) quotas = parsed.quotas;
-        // We might want to pass maxDraws from client or store in DB. 
-        // Currently DB doesn't have maxDraws column strictly, it's in valueJson?
-        // Let's assume it's in valueJson or passed from client.
-        // For security, trust DB or fixed value.
-        // Let's use the body to allow flexibility or default to generic.
+    const quotaSetting = settingsList.find(s => s.keyName === 'quotas');
+    if (quotaSetting && quotaSetting.valueJson) {
+        quotas = quotaSetting.valueJson as any;
     }
     
     // Read maxDraws from body if provided, else default 10

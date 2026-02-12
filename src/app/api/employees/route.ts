@@ -48,6 +48,9 @@ export async function POST(request: Request) {
         skipDuplicates: true, 
       });
       
+      const { logAudit } = await import('@/lib/audit');
+      await logAudit('EMPLOYEE_IMPORT', `Imported ${result.count} employees`, 'Admin');
+      
       return NextResponse.json({ message: 'Imported successfully', count: result.count });
     } else {
       // Single create - also handle potential re-activation
@@ -67,9 +70,13 @@ export async function POST(request: Request) {
           plant: body.plant || '',
           nationality: body.nationality || 'Thai',
           deletedAt: null,
-          isActive: true,
+        isActive: true,
         },
       });
+      
+      const { logAudit } = await import('@/lib/audit');
+      await logAudit('EMPLOYEE_CREATE', `Created/Updated employee ${employeeId}`, 'Admin');
+
       return NextResponse.json(employee);
     }
   } catch (error) {
@@ -102,6 +109,9 @@ export async function DELETE() {
         isActive: false,
       },
     });
+
+    const { logAudit } = await import('@/lib/audit');
+    await logAudit('EMPLOYEE_DELETE_ALL', 'Soft deleted all active employees', 'Admin');
 
     return NextResponse.json({ 
       message: 'All employees soft deleted', 
