@@ -22,11 +22,17 @@ export async function POST(request: Request) {
     
     // Check if it's a bulk import (array) or single create
     if (Array.isArray(body)) {
-      // Upsert many to avoid duplicates
-      // Prisma doesn't support createMany with skipDuplicates for SQLite/Postgres efficiently in all versions
-      // But for Postgres createMany is supported. skipDuplicates is supported in recent versions.
-      // We'll use transaction for safety or just createMany.
+      const employeeIds = body.map((emp: any) => emp.id.toString());
       
+      // Delete existing records to allow re-activation and updating of info
+      await prisma.employee.deleteMany({
+        where: {
+          employeeId: {
+            in: employeeIds
+          }
+        }
+      });
+
       const result = await prisma.employee.createMany({
         data: body.map((emp: any) => ({
           employeeId: emp.id.toString(), // Ensure string
@@ -44,10 +50,16 @@ export async function POST(request: Request) {
       
       return NextResponse.json({ message: 'Imported successfully', count: result.count });
     } else {
-      // Single create
+      // Single create - also handle potential re-activation
+      const employeeId = body.id.toString();
+      
+      await prisma.employee.deleteMany({
+        where: { employeeId }
+      });
+
       const employee = await prisma.employee.create({
         data: {
-          employeeId: body.id.toString(),
+          employeeId,
           name: body.name,
           department: body.department || '',
           section: body.section || '',
@@ -55,6 +67,7 @@ export async function POST(request: Request) {
           plant: body.plant || '',
           nationality: body.nationality || 'Thai',
           deletedAt: null,
+          isActive: true,
         },
       });
       return NextResponse.json(employee);
@@ -86,6 +99,7 @@ export async function DELETE() {
       },
       data: {
         deletedAt: now,
+        isActive: false,
       },
     });
 

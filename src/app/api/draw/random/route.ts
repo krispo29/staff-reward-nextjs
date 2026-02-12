@@ -33,7 +33,7 @@ function selectRandomWinner(
     const targetKey = quotas[dept] !== undefined ? dept : "Others";
     
     const percent = quotas[targetKey] || 0;
-    const maxAllowed = Math.floor(maxDraws * (percent / 100));
+    const maxAllowed = Math.ceil(maxDraws * (percent / 100));
 
     const current = currentCounts[targetKey] || 0;
     
@@ -43,7 +43,12 @@ function selectRandomWinner(
   });
 
   if (eligible.length === 0) {
-    return null;
+    // FALLBACK: If quota blocks everyone, allow any non-winner to be drawn
+    const fallbackEligible = employees.filter((emp) => !excludeIds.has(emp.employeeId));
+    if (fallbackEligible.length === 0) return null;
+    
+    const randomIndex = Math.floor(Math.random() * fallbackEligible.length);
+    return fallbackEligible[randomIndex];
   }
 
   // Secure Random

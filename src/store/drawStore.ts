@@ -162,7 +162,7 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
 
   drawWinner: async () => {
     const { maxDraws } = get();
-    set({ error: null });
+    set({ error: null, isLoading: true });
 
     try {
         const res = await fetch('/api/draw/random', {
@@ -196,6 +196,8 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
           description: errorMsg,
           duration: 4000,
         });
+    } finally {
+        set({ isLoading: false });
     }
   },
 
@@ -266,13 +268,27 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
   clearEmployees: async () => {
     set({ isLoading: true });
     try {
-      const res = await fetch('/api/employees', { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete employees');
-      set({ employees: [] });
-      toast.success("ลบข้อมูลพนักงานทั้งหมดเรียบร้อยแล้ว");
+      // 1. Delete all employees (soft delete + purge old)
+      const empRes = await fetch('/api/employees', { method: 'DELETE' });
+      if (!empRes.ok) throw new Error('Failed to delete employees');
+      
+      // 2. Delete all winners (history)
+      const winRes = await fetch('/api/winners', { method: 'DELETE' });
+      if (!winRes.ok) throw new Error('Failed to delete winners');
+
+      // 3. Reset local state
+      set({ 
+        employees: [], 
+        winners: [], 
+        currentWinner: null, 
+        drawStatus: "idle", 
+        currentDraw: 0 
+      });
+
+      toast.success("ลบข้อมูลทั้งหมดเรียบร้อยแล้ว (รวมประวัติการจับรางวัล)");
     } catch (e) {
       console.error(e);
-      set({ error: "Failed to clear employees" });
+      set({ error: "Failed to clear data" });
       toast.error("เกิดข้อผิดพลาดในการลบข้อมูล");
     } finally {
       set({ isLoading: false });

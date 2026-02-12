@@ -18,6 +18,7 @@ import {
   XCircle,
   WarningCircle,
   ListMagnifyingGlass,
+  CircleNotch,
 } from "@phosphor-icons/react";
 import { EntrantsModal } from "./EntrantsModal";
 
@@ -37,6 +38,7 @@ export function DrawScreen() {
     reset,
     error,
     clearError,
+    isLoading,
   } = useDrawStore();
 
   const [showEntrantsModal, setShowEntrantsModal] = React.useState(false);
@@ -202,10 +204,20 @@ export function DrawScreen() {
                   clearError();
                   handleDraw();
                 }}
-                className="h-16 md:h-20 px-10 md:px-14 text-xl md:text-2xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 border-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading}
+                className="h-16 md:h-20 px-10 md:px-14 text-xl md:text-2xl font-bold rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 hover:from-yellow-400 hover:via-amber-400 hover:to-orange-400 text-white shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 transition-all duration-300 border-0 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <PlayCircle weight="duotone" className="w-7 h-7 mr-2" />
-                จับรางวัล
+                {isLoading ? (
+                  <>
+                    <CircleNotch weight="bold" className="w-7 h-7 mr-2 animate-spin" />
+                    กำลังจับรางวัล...
+                  </>
+                ) : (
+                  <>
+                    <PlayCircle weight="duotone" className="w-7 h-7 mr-2" />
+                    จับรางวัล
+                  </>
+                )}
               </Button>
             </div>
           )}

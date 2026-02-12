@@ -11,6 +11,7 @@ import {
   WarningCircle,
   Plus,
   CaretDown,
+  CircleNotch,
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
@@ -44,7 +45,7 @@ const emptyRow: EmployeeRow = {
 };
 
 export function ManualEmployeeEntry() {
-  const { employees, loadEmployees } = useDrawStore();
+  const { employees, importEmployees } = useDrawStore();
   const [rows, setRows] = useState<EmployeeRow[]>([{ ...emptyRow }]);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [status, setStatus] = useState<{
@@ -52,6 +53,7 @@ export function ManualEmployeeEntry() {
     message: string;
   }>({ type: "idle", message: "" });
   const [showClearDialog, setShowClearDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateRow = (index: number, field: keyof EmployeeRow, value: string) => {
     setRows((prev) => {
@@ -71,7 +73,7 @@ export function ManualEmployeeEntry() {
     if (openDropdown === index) setOpenDropdown(null);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Filter out empty rows
     const validRows = rows.filter((row) => row.id.trim() !== "");
 
@@ -111,23 +113,27 @@ export function ManualEmployeeEntry() {
       nationality: row.nationality,
     }));
 
-    // Merge with existing employees (avoid duplicates)
-    const existingIds = new Set(employees.map((e) => e.id));
-    const uniqueNew = newEmployees.filter((e) => !existingIds.has(e.id));
-    const mergedEmployees = [...employees, ...uniqueNew];
+    setIsSubmitting(true);
+    setStatus({ type: "idle", message: "กำลังบันทึกข้อมูล..." });
 
-    loadEmployees(mergedEmployees);
+    try {
+      await importEmployees(newEmployees);
+      
+      setStatus({
+        type: "success",
+        message: `เพิ่มพนักงาน ${newEmployees.length} คนสำเร็จ (บันทึกลงฐานข้อมูลแล้ว)`,
+      });
 
-    const skipped = newEmployees.length - uniqueNew.length;
-    setStatus({
-      type: "success",
-      message: `เพิ่มพนักงาน ${uniqueNew.length} คนสำเร็จ${
-        skipped > 0 ? ` (ข้าม ${skipped} คนที่มีอยู่แล้ว)` : ""
-      }`,
-    });
-
-    // Reset form
-    setRows([{ ...emptyRow }]);
+      // Reset form on success
+      setRows([{ ...emptyRow }]);
+    } catch (err) {
+      setStatus({
+        type: "error",
+        message: err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการบันทึกข้อมูล",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const confirmClearForm = () => {
@@ -296,10 +302,20 @@ export function ManualEmployeeEntry() {
       <div className="flex gap-3 relative z-0 pt-2">
         <Button
           onClick={handleSubmit}
-          className="flex-1 h-14 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 cursor-pointer"
+          disabled={isSubmitting}
+          className="flex-1 h-14 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 cursor-pointer disabled:opacity-70"
         >
-          <UserPlus weight="bold" className="w-6 h-6 mr-2" />
-          เพิ่มพนักงาน
+          {isSubmitting ? (
+            <>
+              <CircleNotch weight="bold" className="w-6 h-6 mr-2 animate-spin" />
+              กำลังบันทึก...
+            </>
+          ) : (
+            <>
+              <UserPlus weight="bold" className="w-6 h-6 mr-2" />
+              เพิ่มพนักงาน
+            </>
+          )}
         </Button>
         <Button
           onClick={() => setShowClearDialog(true)}
