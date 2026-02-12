@@ -1,0 +1,12 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:password@localhost:5432/staff_reward_db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+}

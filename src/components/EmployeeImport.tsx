@@ -5,9 +5,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDrawStore } from "@/store/drawStore";
 import { parseEmployeeCSV } from "@/lib/csvParser";
 import { UploadSimple, FileCsv, CheckCircle, WarningCircle } from "@phosphor-icons/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Employee } from "@/types/employee";
 
 export function EmployeeImport() {
-  const { loadEmployees } = useDrawStore();
+  const { importEmployees } = useDrawStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [status, setStatus] = useState<{
@@ -15,6 +25,9 @@ export function EmployeeImport() {
     message: string;
     count?: number;
   }>({ type: "idle", message: "" });
+  
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [parsedEmployees, setParsedEmployees] = useState<Employee[]>([]);
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -26,12 +39,14 @@ export function EmployeeImport() {
       try {
         setStatus({ type: "idle", message: "กำลังอ่านไฟล์..." });
         const employees = await parseEmployeeCSV(file);
-        loadEmployees(employees);
-        setStatus({
-          type: "success",
-          message: `นำเข้าข้อมูลพนักงานสำเร็จ`,
-          count: employees.length,
-        });
+        
+        if (employees.length === 0) {
+            setStatus({ type: "error", message: "ไม่พบข้อมูลในไฟล์ CSV" });
+            return;
+        }
+
+        setParsedEmployees(employees);
+        setShowConfirmDialog(true);
       } catch (err) {
         setStatus({
           type: "error",
@@ -39,8 +54,26 @@ export function EmployeeImport() {
         });
       }
     },
-    [loadEmployees]
+    []
   );
+
+  const confirmImport = async () => {
+    try {
+        setShowConfirmDialog(false);
+        setStatus({ type: "idle", message: "กำลังนำเข้าข้อมูล..." });
+        await importEmployees(parsedEmployees);
+        setStatus({
+          type: "success",
+          message: `นำเข้าข้อมูลพนักงานสำเร็จ`,
+          count: parsedEmployees.length,
+        });
+    } catch (err) {
+        setStatus({
+          type: "error",
+          message: err instanceof Error ? err.message : "เกิดข้อผิดพลาด",
+        });
+    }
+  };
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -140,6 +173,35 @@ export function EmployeeImport() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent className="bg-slate-900 border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl">ยืนยันการนำเข้าข้อมูล</DialogTitle>
+            <DialogDescription className="text-white/60">
+              พบข้อมูลพนักงานจำนวน <span className="text-blue-400 font-bold">{parsedEmployees.length}</span> คนจากไฟล์ CSV
+              <br />
+              คุณต้องการนำเข้าข้อมูลเหล่านี้หรือไม่?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+              className="flex-1 h-12 text-base font-semibold border-white/20 text-white bg-white/5 hover:bg-white/10 transition-all cursor-pointer mr-2"
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              onClick={confirmImport}
+              className="flex-1 h-12 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+            >
+              ยืนยัน นำเข้า
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
