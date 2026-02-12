@@ -179,15 +179,51 @@ export function EmployeeImport() {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent className="bg-slate-900 border-white/10 text-white">
+        <DialogContent className="!w-[90vw] !max-w-7xl bg-slate-900 border-white/10 text-white">
           <DialogHeader>
             <DialogTitle className="text-xl">ยืนยันการนำเข้าข้อมูล</DialogTitle>
             <DialogDescription className="text-white/60">
               พบข้อมูลพนักงานจำนวน <span className="text-blue-400 font-bold">{parsedEmployees.length}</span> คนจากไฟล์ CSV
-              <br />
-              คุณต้องการนำเข้าข้อมูลเหล่านี้หรือไม่?
             </DialogDescription>
           </DialogHeader>
+
+          <div className="my-4 max-h-[400px] overflow-auto rounded-lg border border-white/10 bg-black/20">
+            <table className="w-full text-sm text-left">
+              <thead className="sticky top-0 bg-slate-800 text-white/70 uppercase text-xs">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">รหัสพนักงาน</th>
+                  <th className="px-4 py-3 font-semibold">ชื่อ-นามสกุล</th>
+                  <th className="px-4 py-3 font-semibold">แผนก</th>
+                  <th className="px-4 py-3 font-semibold">Section</th>
+                  <th className="px-4 py-3 font-semibold">ตำแหน่ง</th>
+                  <th className="px-4 py-3 font-semibold">Plant</th>
+                  <th className="px-4 py-3 font-semibold">สัญชาติ</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {parsedEmployees.map((emp, index) => (
+                  <tr key={index} className="hover:bg-white/5 transition-colors">
+                    <td className="px-4 py-2.5 font-mono text-blue-400">{emp.id}</td>
+                    <td className="px-4 py-2.5 text-white/90">{emp.name}</td>
+                    <td className="px-4 py-2.5 text-white/60">{emp.department}</td>
+                    <td className="px-4 py-2.5 text-white/60">{emp.section}</td>
+                    <td className="px-4 py-2.5 text-white/60">{emp.position}</td>
+                    <td className="px-4 py-2.5 text-white/60">{emp.plant}</td>
+                    <td className="px-4 py-2.5">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold ${
+                        emp.nationality?.toLowerCase() === 'myanmar' 
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' 
+                        : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                      }`}>
+                        {emp.nationality || 'Thai'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
@@ -200,7 +236,7 @@ export function EmployeeImport() {
               onClick={confirmImport}
               className="flex-1 h-12 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
             >
-              ยืนยัน นำเข้า
+              ยืนยัน นำเข้า ({parsedEmployees.length} คน)
             </Button>
           </DialogFooter>
         </DialogContent>
