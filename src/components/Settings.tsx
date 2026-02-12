@@ -1,12 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useDrawStore } from "@/store/drawStore";
-import { Gauge, SpeakerHigh, SpeakerX, Sparkle } from "@phosphor-icons/react";
+import { Gauge, SpeakerHigh, SpeakerX, Sparkle, Trash } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 export function Settings() {
   const { settings, updateSettings } = useDrawStore();
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
 
   return (
     <div className="space-y-5">
@@ -87,6 +97,48 @@ export function Settings() {
             }`}
           />
         </button>
+      </div>
+
+      {/* Clear Data */}
+      <div className="pt-4 border-t border-white/10">
+        <h4 className="text-sm font-medium text-white/80 mb-3">จัดการข้อมูล</h4>
+        <Button
+          variant="destructive"
+          onClick={() => setIsClearConfirmOpen(true)}
+          className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/50 hover:border-red-400"
+        >
+          <Trash weight="duotone" className="w-4 h-4" />
+          ล้างข้อมูลพนักงานทั้งหมด
+        </Button>
+
+        <Dialog open={isClearConfirmOpen} onOpenChange={setIsClearConfirmOpen}>
+          <DialogContent className="sm:max-w-md bg-slate-900 text-white border-white/10">
+            <DialogHeader>
+              <DialogTitle className="text-white">ยืนยันการลบข้อมูล</DialogTitle>
+              <DialogDescription className="text-white/70">
+                คุณแน่ใจหรือไม่ที่จะลบข้อมูลพนักงานทั้งหมด? การกระทำนี้ไม่สามารถย้อนกลับได้
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex gap-2 sm:justify-end">
+              <DialogClose asChild>
+                <Button variant="outline" className="border-white/10 text-white hover:bg-white/10 bg-transparent">
+                  ยกเลิก
+                </Button>
+              </DialogClose>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  const { clearEmployees } = useDrawStore.getState();
+                  clearEmployees();
+                  setIsClearConfirmOpen(false);
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white border-none"
+              >
+                ลบข้อมูลทั้งหมด
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

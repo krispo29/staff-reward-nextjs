@@ -31,6 +31,7 @@ interface DrawStore {
   clearError: () => void;
   loadEmployees: (employees: Employee[]) => void;
   updateSettings: (settings: Partial<DrawSettings>) => Promise<void>;
+  clearEmployees: () => Promise<void>;
 }
 
 export const useDrawStore = create<DrawStore>((set, get) => ({
@@ -261,6 +262,22 @@ export const useDrawStore = create<DrawStore>((set, get) => ({
 
 
   updateSettings: (newSettings: Partial<DrawSettings>) => get().saveSettings(newSettings), // Alias to saveSettings for compat
+
+  clearEmployees: async () => {
+    set({ isLoading: true });
+    try {
+      const res = await fetch('/api/employees', { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete employees');
+      set({ employees: [] });
+      toast.success("ลบข้อมูลพนักงานทั้งหมดเรียบร้อยแล้ว");
+    } catch (e) {
+      console.error(e);
+      set({ error: "Failed to clear employees" });
+      toast.error("เกิดข้อผิดพลาดในการลบข้อมูล");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
   clearError: () => set({ error: null }),
 }));

@@ -16,7 +16,7 @@ import { useDrawStore } from "@/store/drawStore";
 import { useAuth } from "@/hooks/useAuth";
 import { printWinners } from "@/lib/exportWinners";
 import { EmployeeImport } from "./EmployeeImport";
-import { ManualEmployeeEntry } from "./ManualEmployeeEntry";
+
 import { Settings } from "./Settings";
 import {
   Gear,
@@ -26,7 +26,6 @@ import {
   CaretDown,
   CaretUp,
   X,
-  UserPlus,
   Lock,
   SignOut,
   CircleNotch,
@@ -212,35 +211,7 @@ export function AdminPanel() {
                         </AnimatePresence>
 
                         {/* Manual entry section */}
-                        <button
-                        onClick={() => toggleSection("manual")}
-                        className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/8 transition-colors cursor-pointer"
-                        >
-                        <span className="font-medium flex items-center gap-2">
-                            <UserPlus weight="duotone" className="w-4 h-4 text-blue-400" />
-                            กรอกข้อมูลพนักงาน
-                        </span>
-                        {activeSection === "manual" ? (
-                            <CaretUp weight="bold" className="w-4 h-4" />
-                        ) : (
-                            <CaretDown weight="bold" className="w-4 h-4" />
-                        )}
-                        </button>
-                        <AnimatePresence>
-                        {activeSection === "manual" && (
-                            <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="overflow-hidden"
-                            >
-                            <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                                <ManualEmployeeEntry />
-                            </div>
-                            </motion.div>
-                        )}
-                        </AnimatePresence>
+
 
                         {/* Settings section */}
                         <button

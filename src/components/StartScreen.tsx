@@ -9,9 +9,12 @@ import { Trophy, Sparkle, Users, Sparkle as SparklesAlias } from "@phosphor-icon
 export function StartScreen() {
   const { startDraw, employees, fetchEmployees, isLoading } = useDrawStore();
 
+  const initialized = React.useRef(false);
+
   useEffect(() => {
-    // Fetch real data on mount if empty
-    if (employees.length === 0 && !isLoading) {
+    // Fetch real data on mount if empty strict once
+    if (!initialized.current && employees.length === 0 && !isLoading) {
+      initialized.current = true;
       fetchEmployees();
     }
   }, [employees.length, fetchEmployees, isLoading]);

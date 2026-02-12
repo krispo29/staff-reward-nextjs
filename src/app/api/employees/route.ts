@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+// GET: Fetch active employees (not soft-deleted)
 export async function GET() {
   try {
     const employees = await prisma.employee.findMany({
+      where: {
+        deletedAt: null, // Only active employees
+      },
       orderBy: { employeeId: 'asc' },
     });
     return NextResponse.json(employees);
@@ -33,6 +37,7 @@ export async function POST(request: Request) {
           plant: emp.plant,
           nationality: emp.nationality || 'Thai',
           isActive: true,
+          deletedAt: null, // Ensure new users are active
         })),
         skipDuplicates: true, 
       });
@@ -49,6 +54,7 @@ export async function POST(request: Request) {
           position: body.position || '',
           plant: body.plant || '',
           nationality: body.nationality || 'Thai',
+          deletedAt: null,
         },
       });
       return NextResponse.json(employee);
@@ -56,5 +62,39 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json({ error: 'Failed to create employee' }, { status: 500 });
+  }
+}
+
+export async function DELETE() {
+  try {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    // 1. Permanently delete records soft-deleted more than 7 days ago
+    const deleted = await prisma.employee.deleteMany({
+      where: {
+        deletedAt: {
+          lt: sevenDaysAgo,
+        },
+      },
+    });
+
+    // 2. Soft delete all currently active employees
+    await prisma.employee.updateMany({
+      where: {
+        deletedAt: null,
+      },
+      data: {
+        deletedAt: now,
+      },
+    });
+
+    return NextResponse.json({ 
+      message: 'All employees soft deleted', 
+      permanentlyDeleted: deleted.count 
+    });
+  } catch (error) {
+    console.error("Delete Error:", error);
+    return NextResponse.json({ error: 'Failed to delete employees' }, { status: 500 });
   }
 }

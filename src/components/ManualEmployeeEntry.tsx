@@ -14,6 +14,14 @@ import {
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { FlagThai, FlagMyanmar } from "@/components/icons/Flags";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface EmployeeRow {
   id: string;
@@ -43,6 +51,7 @@ export function ManualEmployeeEntry() {
     type: "idle" | "success" | "error";
     message: string;
   }>({ type: "idle", message: "" });
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const updateRow = (index: number, field: keyof EmployeeRow, value: string) => {
     setRows((prev) => {
@@ -121,19 +130,15 @@ export function ManualEmployeeEntry() {
     setRows([{ ...emptyRow }]);
   };
 
-  const handleClearAll = () => {
-    if (window.confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลพนักงานทั้งหมด?")) {
-      loadEmployees([]);
-      setStatus({ type: "success", message: "ล้างข้อมูลพนักงานทั้งหมดแล้ว" });
-    }
+  const confirmClearForm = () => {
+    setRows([{ ...emptyRow }]);
+    setStatus({ type: "idle", message: "" });
+    setShowClearDialog(false);
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-        <UserPlus weight="duotone" className="w-5 h-5 text-blue-400" />
-        กรอกข้อมูลพนักงาน
-      </h3>
+
 
       {/* Current employee count */}
       <div className="text-sm text-white/60 bg-white/5 rounded-lg px-3 py-2 border border-white/10">
@@ -141,7 +146,7 @@ export function ManualEmployeeEntry() {
       </div>
 
       {/* Table header */}
-      <div className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr_1fr_90px_36px] gap-2 text-xs text-white/50 font-medium px-1">
+      <div className="grid grid-cols-[100px_1.5fr_1fr_1fr_1fr_1fr_110px_40px] gap-3 text-sm text-white/50 font-medium px-1 mb-2">
         <span>รหัส (7 หลัก)</span>
         <span>ชื่อ-สกุล</span>
         <span>Plant</span>
@@ -153,13 +158,13 @@ export function ManualEmployeeEntry() {
       </div>
 
       {/* Rows */}
-      <div className="space-y-2 max-h-[300px] overflow-visible pr-1">
+      <div className="space-y-3 max-h-[60vh] overflow-visible pr-1">
         {rows.map((row, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-[80px_1.5fr_1fr_1fr_1fr_1fr_90px_36px] gap-2 relative"
+            className="grid grid-cols-[100px_1.5fr_1fr_1fr_1fr_1fr_110px_40px] gap-3 relative items-start"
             style={{ zIndex: openDropdown === index ? 50 : 1 }}
           >
             <input
@@ -170,42 +175,42 @@ export function ManualEmployeeEntry() {
                 updateRow(index, "id", val);
               }}
               placeholder="2210001"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30 tabular-nums"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 tabular-nums transition-all hover:bg-white/10"
             />
             <input
               type="text"
               value={row.name}
               onChange={(e) => updateRow(index, "name", e.target.value)}
               placeholder="ชื่อ-สกุล"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 transition-all hover:bg-white/10"
             />
             <input
               type="text"
               value={row.plant}
               onChange={(e) => updateRow(index, "plant", e.target.value)}
               placeholder="Plant"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 transition-all hover:bg-white/10"
             />
             <input
               type="text"
               value={row.department}
               onChange={(e) => updateRow(index, "department", e.target.value)}
               placeholder="แผนก"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 transition-all hover:bg-white/10"
             />
             <input
               type="text"
               value={row.section}
               onChange={(e) => updateRow(index, "section", e.target.value)}
               placeholder="Section"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 transition-all hover:bg-white/10"
             />
             <input
               type="text"
               value={row.position}
               onChange={(e) => updateRow(index, "position", e.target.value)}
               placeholder="ตำแหน่ง"
-              className="w-full px-2 py-1.5 text-sm rounded-md bg-white/10 border border-white/15 text-white placeholder:text-white/30 focus:outline-none focus:border-blue-400/50 focus:ring-1 focus:ring-blue-400/30"
+              className="w-full px-3 py-2.5 text-base rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/20 transition-all hover:bg-white/10"
             />
             
             {/* Custom Nationality Dropdown */}
@@ -281,29 +286,58 @@ export function ManualEmployeeEntry() {
       {/* Add row button */}
       <button
         onClick={addRow}
-        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-white/20 text-white/50 hover:text-blue-300 hover:border-blue-400/30 hover:bg-blue-500/5 transition-colors text-sm cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border border-dashed border-white/20 text-white/60 hover:text-blue-300 hover:border-blue-400/50 hover:bg-blue-500/10 transition-colors text-base font-medium cursor-pointer"
       >
-        <Plus weight="bold" className="w-4 h-4" />
+        <Plus weight="bold" className="w-5 h-5" />
         เพิ่มแถว
       </button>
 
       {/* Action buttons */}
-      <div className="flex gap-2 relative z-0">
+      <div className="flex gap-3 relative z-0 pt-2">
         <Button
           onClick={handleSubmit}
-          className="flex-1 h-12 text-base font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 cursor-pointer"
+          className="flex-1 h-14 text-lg font-bold bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20 cursor-pointer"
         >
-          <UserPlus weight="bold" className="w-5 h-5 mr-2" />
+          <UserPlus weight="bold" className="w-6 h-6 mr-2" />
           เพิ่มพนักงาน
         </Button>
         <Button
-          onClick={handleClearAll}
+          onClick={() => setShowClearDialog(true)}
           variant="outline"
-          className="flex-1 h-12 text-base font-semibold border-white/20 text-white bg-white/5 hover:bg-red-500/10 hover:text-red-400 hover:border-red-400/30 transition-all cursor-pointer"
+          className="flex-1 h-14 text-lg font-semibold border-white/20 text-white bg-white/5 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
         >
-          ล้างทั้งหมด
+          ล้างแบบฟอร์ม
         </Button>
       </div>
+
+      {/* Clear Confirmation Dialog */}
+      <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+        <DialogContent className="bg-slate-900 border-white/10 text-white z-[100]">
+          <DialogHeader>
+            <DialogTitle>ยืนยันการล้างข้อมูล</DialogTitle>
+            <DialogDescription className="text-white/60">
+              คุณแน่ใจหรือไม่ว่าต้องการล้างข้อมูลในแบบฟอร์มทั้งหมด?
+              <br />
+              การกระทำนี้ไม่สามารถเรียกคืนได้
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowClearDialog(false)}
+              className="border-white/20 text-white bg-white/5 hover:bg-white/10"
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              onClick={confirmClearForm}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              ยืนยัน ล้างข้อมูล
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Status message */}
       <AnimatePresence>
