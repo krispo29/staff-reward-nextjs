@@ -1,6 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useDrawStore } from '@/store/drawStore';
-import { generateMockEmployees } from '@/data/mockEmployees';
+import { useDrawStore } from '@/store/drawStore';
+
+// Inline mock generator
+const generateMockEmployees = (count: number) => {
+  return Array.from({ length: count }, (_, i) => ({
+    id: `EMP${String(i + 1).padStart(3, '0')}`,
+    name: `Employee ${i + 1}`,
+    department: ['Production', 'Cutting', 'Common', 'PE', 'Maintenance', 'Admin', 'QA', 'HR'][i % 8],
+    section: 'Section A',
+    position: 'Operator',
+    plant: 'Bangkok Plant',
+    nationality: 'Thai',
+    isActive: true,
+  }));
+};
 
 // Mock the audioUtils to prevent errors in test environment
 vi.mock('@/lib/audioUtils', () => ({

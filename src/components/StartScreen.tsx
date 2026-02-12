@@ -4,22 +4,17 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useDrawStore } from "@/store/drawStore";
-import { mockEmployees } from "@/data/mockEmployees";
 import { Trophy, Sparkle, Users, Sparkle as SparklesAlias } from "@phosphor-icons/react";
 
 export function StartScreen() {
-  const { loadEmployees, startDraw, employees } = useDrawStore();
+  const { startDraw, employees, fetchEmployees, isLoading } = useDrawStore();
 
   useEffect(() => {
-    // Load mock data if empty OR if the data seems stale (missing any new field)
-    const firstEmp = employees[0];
-    const isStale = firstEmp && (!firstEmp.plant || !firstEmp.section || !firstEmp.position);
-
-    if (employees.length === 0 || isStale) {
-      console.log("Found stale data. Reloading mock data with new fields...");
-      loadEmployees(mockEmployees);
+    // Fetch real data on mount if empty
+    if (employees.length === 0 && !isLoading) {
+      fetchEmployees();
     }
-  }, [employees.length, loadEmployees, employees]);
+  }, [employees.length, fetchEmployees, isLoading]);
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 md:gap-12 text-center w-full max-w-3xl mx-auto">
